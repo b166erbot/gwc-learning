@@ -1,0 +1,1287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.1 -->
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <object class="GtkWindow" id="janela">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="resizable">False</property>
+    <property name="window_position">center</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="gravity">center</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkGrid">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkImage" id="esc">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">serve para cancelar algo ou até mesmo voltar para algo anterior dependendo da onde vc digitar o mesmo.</property>
+                    <property name="margin_right">26</property>
+                    <property name="pixbuf">imagens/normais/esc.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_right">24</property>
+                    <child>
+                      <object class="GtkImage" id="f1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">geralmente serve para exibir a ajuda em qualquer programa mas não em todos.</property>
+                        <property name="pixbuf">imagens/normais/f1.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="f2">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f2.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="f3">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f3.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="f4">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f4.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_right">24</property>
+                    <child>
+                      <object class="GtkImage" id="f5">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f5.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="f6">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f6.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="f7">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f7.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="f8">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f8.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkImage" id="f9">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f9.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="f10">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f10.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="f11">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f11.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="f12">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixbuf">imagens/normais/f12.png</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="spacing">1</property>
+                <child>
+                  <object class="GtkImage" id="aspas">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém aspas simples ou duplas (&lt;-shift + aspas simples)</property>
+                    <property name="pixbuf">imagens/normais/aspas.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="um">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 1 e exclamação (&lt;-shift + 1)</property>
+                    <property name="pixbuf">imagens/normais/1.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="dois">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 2 e arroba (@ &lt;-shift + 2)</property>
+                    <property name="pixbuf">imagens/normais/2.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="tres">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 3 e cerquilha (# &lt;-shift + 3)</property>
+                    <property name="pixbuf">imagens/normais/3.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="quatro">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 4 e sifrão  ($ &lt;-shift + 4)</property>
+                    <property name="pixbuf">imagens/normais/4.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="cinco">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 5 e porcentagem  (% &lt;-shift + 5)</property>
+                    <property name="pixbuf">imagens/normais/5.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="seis">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 6 e hífen (¨ &lt;-shift + 6)</property>
+                    <property name="pixbuf">imagens/normais/6.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="sete">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 7 e &amp;  (&amp; &lt;-shift + 7)</property>
+                    <property name="pixbuf">imagens/normais/7.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">7</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="oito">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 8 e asterístico (* &lt;-shift + 8)</property>
+                    <property name="pixbuf">imagens/normais/8.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">8</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="nove">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 9 e parêntese esquerdo ( ( &lt;-shift + 9)</property>
+                    <property name="pixbuf">imagens/normais/9.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">9</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="zero">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 0 e parêntese direito ( ( &lt;-shift + 0)</property>
+                    <property name="pixbuf">imagens/normais/0.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">10</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="menos">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o sinal menos e o underscore (underline). (underscore = shift + menos)</property>
+                    <property name="pixbuf">imagens/normais/menos.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">11</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="igual">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o sinal igual e o sinal mais. (&lt;-shift + igual)</property>
+                    <property name="pixbuf">imagens/normais/igual.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">12</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="backspace">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">serve para apagar tudo o que estiver do pipe para a esquerda. o pipe é este caracter -&gt; |</property>
+                    <property name="pixbuf">imagens/normais/backspace.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">13</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="spacing">1</property>
+                        <child>
+                          <object class="GtkImage" id="tab">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">serve para inserir uma tabulação em um programa de texto (tabulação = espaço comprido) ou saltar entre as caixas de diálogo (como a do aluno ou professor abaixo).</property>
+                            <property name="pixbuf">imagens/normais/tab.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="q">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/q.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="w">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/w.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="e">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/e.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="r">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/r.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="t">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/t.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">5</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="y">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/y.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">6</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="u">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/u.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">7</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="i">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/i.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">8</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="o">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/o.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">9</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="p">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/p.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">10</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="agudo">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">esta tecla contém acento agudo e crase (&lt;-shift + agudo)</property>
+                            <property name="pixbuf">imagens/normais/agudo.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">11</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="colchete-esquerdo">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">esta tecla contém colchete e chave esquerdos (chave = shift + colchete)</property>
+                            <property name="pixbuf">imagens/normais/colchete_esquerdo.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">12</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkImage" id="capslock">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">serve para colocar todas as letras digitadas em maiúsculo ou minúsculo.</property>
+                            <property name="pixbuf">imagens/normais/capslock.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="a">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/a.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="s">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/s.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="d">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/d.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="f">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/f.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="g">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/g.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">5</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="h">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/h.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">6</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="j">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/j.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">7</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="k">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/k.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">8</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="l">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/l.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">9</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="ç">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="pixbuf">imagens/normais/ç.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">10</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="til">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">esta tecla contém acento til e circunflexo (&lt;-shift + til)</property>
+                            <property name="pixbuf">imagens/normais/til.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">11</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="colchete-direito">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">esta tecla contém colchete e chave direitos (chave = shift + colchete)</property>
+                            <property name="pixbuf">imagens/normais/colchete_direito.png</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">12</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="enter">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">serve para 'executar um programa/abrir um arquivo/entrar em uma pasta' se o mesmo estiver selecionado, salta uma linha em um programa de texto e etc..</property>
+                    <property name="pixbuf">imagens/normais/enter.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="spacing">1</property>
+                <child>
+                  <object class="GtkImage" id="shift-esquerdo">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">serve para inverter as coisas que você faz, seja ela o que for. exemplos:
+inverter um a &gt; A,    A &gt; a,   tab &gt; tab do avesso,    \ &gt; |,    ; &gt; ?,  etc..</property>
+                    <property name="pixbuf">imagens/normais/shift_esquerdo.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="barra-esquerda">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém barra esquerda e pipeline (&lt;-shift + barra esquerda)</property>
+                    <property name="pixbuf">imagens/normais/barra_esquerda.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="z">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="pixbuf">imagens/normais/z.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="x">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="pixbuf">imagens/normais/x.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="c">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="pixbuf">imagens/normais/c.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="v">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="pixbuf">imagens/normais/v.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="b">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="pixbuf">imagens/normais/b.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="n">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="pixbuf">imagens/normais/n.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">7</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="m">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="pixbuf">imagens/normais/m.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">8</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="virgula">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém virgula e seta para a esquerda. (&lt;-shift + virgula)</property>
+                    <property name="pixbuf">imagens/normais/virgula.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">9</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="ponto">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o ponto e a seta para à direita. (&lt;-shift + ponto)</property>
+                    <property name="pixbuf">imagens/normais/ponto.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">10</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="ponto-virgula">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém ponto e virgula juntos e dois pontos também juntos (&lt;-shift + ponto e virgula)</property>
+                    <property name="pixbuf">imagens/normais/ponto_virgula.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">11</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="barra-direita">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém barra direita e interrogação (&lt;-shift + barra direita)</property>
+                    <property name="pixbuf">imagens/normais/barra_direita.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">12</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="shift-direito">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">serve para inverter as coisas que você faz, seja ela o que for. exemplos:
+inverter um a &gt; A,    A &gt; a,   tab &gt; tab do avesso,    \ &gt; |,    ; &gt; ?,  etc..</property>
+                    <property name="margin_left">1</property>
+                    <property name="pixbuf">imagens/normais/shift_direito.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">13</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="spacing">4</property>
+                <child>
+                  <object class="GtkImage" id="control-esquerdo">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">geralmente serve para atalhos no teclado</property>
+                    <property name="pixbuf">imagens/normais/control_esquerdo.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="windows-esquerdo">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">geralmente abre o menu do sistema operacional em questão.</property>
+                    <property name="pixbuf">imagens/normais/windows_esquerdo.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="alt-esquerdo">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">geralmente serve para atalhos no teclado</property>
+                    <property name="pixbuf">imagens/normais/alt_esquerdo.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="espaço">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">imprime um espaço</property>
+                    <property name="pixbuf">imagens/normais/espaço.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="alt-direito">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">geralmente serve para atalhos no teclado</property>
+                    <property name="pixbuf">imagens/normais/alt_direito.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="windows-direito">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">geralmente abre o menu do sistema operacional em questão.</property>
+                    <property name="pixbuf">imagens/normais/windows_direito.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="menu">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">serve para exibir o menu das coisas (janelas, imagens, qualquer coisa) exatamente igual ao botão direito do mouse</property>
+                    <property name="pixbuf">imagens/normais/menu.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="control-direito">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">geralmente serve para atalhos no teclado</property>
+                    <property name="margin_left">5</property>
+                    <property name="pixbuf">imagens/normais/control_direito.png</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">7</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Área do professor abaixo:</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">5</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Área do aluno abaixo:</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkImage" id="maos">
+                <property name="can_focus">False</property>
+                <property name="pixbuf">imagens/mãos.png</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">9</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="height_request">70</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="shadow_type">in</property>
+                <child>
+                  <object class="GtkTextView" id="professor">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">digite o texto para o aluno replicar</property>
+                    <property name="wrap_mode">word</property>
+                    <property name="left_margin">5</property>
+                    <property name="buffer">texto_professor</property>
+                    <property name="accepts_tab">False</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">6</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="height_request">70</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="shadow_type">in</property>
+                <child>
+                  <object class="GtkTextView" id="aluno">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">digite o texto para o aluno replicar</property>
+                    <property name="wrap_mode">word</property>
+                    <property name="left_margin">5</property>
+                    <property name="buffer">texto_aluno</property>
+                    <property name="accepts_tab">False</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">8</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">20</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkFileChooserButton" id="arquivo">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="tooltip_text" translatable="yes">abrir arquivo ao qual o programa exibirá os caracters para o aluno digitar</property>
+                    <property name="do_overwrite_confirmation">True</property>
+                    <property name="title" translatable="yes"/>
+                    <property name="width_chars">10</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="limpar_arquivo">
+                    <property name="label" translatable="yes">limpar arquivo</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="receives_default">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkCheckButton" id="mostrar_maos">
+                    <property name="label" translatable="yes">mostar mãos</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="tooltip_text" translatable="yes">se marcada, irá mostar a imagem das mãos</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="auto_apagar">
+                    <property name="label" translatable="yes">auto-apagar</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="receives_default">False</property>
+                    <property name="tooltip_text" translatable="yes">se marcada, irá apagar automaticamente quando digitado uma tecla errada.</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkTextBuffer" id="texto_aluno"/>
+  <object class="GtkTextBuffer" id="texto_professor"/>
+</interface>
