@@ -2,6 +2,8 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkTextBuffer" id="texto_aluno"/>
+  <object class="GtkTextBuffer" id="texto_professor"/>
   <object class="GtkWindow" id="janela">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -9,6 +11,9 @@
     <property name="window_position">center</property>
     <property name="destroy_with_parent">True</property>
     <property name="gravity">center</property>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
@@ -1197,9 +1202,10 @@ inverter um a &gt; A,    A &gt; a,   tab &gt; tab do avesso,    \ &gt; |,    ; &
                     <property name="can_focus">False</property>
                     <property name="focus_on_click">False</property>
                     <property name="tooltip_text" translatable="yes">abrir arquivo ao qual o programa exibirá os caracters para o aluno digitar</property>
+                    <property name="create_folders">False</property>
                     <property name="do_overwrite_confirmation">True</property>
                     <property name="title" translatable="yes"/>
-                    <property name="width_chars">10</property>
+                    <property name="width_chars">8</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -1209,7 +1215,8 @@ inverter um a &gt; A,    A &gt; a,   tab &gt; tab do avesso,    \ &gt; |,    ; &
                 </child>
                 <child>
                   <object class="GtkButton" id="limpar_arquivo">
-                    <property name="label" translatable="yes">limpar arquivo</property>
+                    <property name="label" translatable="yes">remover
+arquivo</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="focus_on_click">False</property>
@@ -1282,6 +1289,4 @@ inverter um a &gt; A,    A &gt; a,   tab &gt; tab do avesso,    \ &gt; |,    ; &
       </object>
     </child>
   </object>
-  <object class="GtkTextBuffer" id="texto_aluno"/>
-  <object class="GtkTextBuffer" id="texto_professor"/>
 </interface>

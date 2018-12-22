@@ -4,10 +4,6 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-# colocar texto de ajuda nas teclas 1 ao 0 no glade pois as mesmas contém mais
-# de uma tecla.
-# fazer a recursividade para o dicionário.
-
 d = {' ': 'espaço', '/': 'barra_direita', '\\': 'barra_esquerda',
      '|': ['sh', '\\'], '?': ['sh', '/'],
      '[': 'colchete_esquerdo', ']': 'colchete_direito', '\n': 'enter',
@@ -38,7 +34,7 @@ def RD(item):
     return (RD(a.lower()) for a in item)
 
 
-def colorir(texto, posicao, cor='green'):
+def colorir(texto, posicao, cor='yellow3'):
     texto = texto.split()
     texto[posicao] = f'<span color="{cor}">{texto[posicao]}</span>'
     return ' '.join(texto)
@@ -54,6 +50,7 @@ class Janela:
         self.builder = Gtk.Builder()
         self.local = getcwd()
         self.texto = ''
+        self.n_word_cache = -1
 
         # obtendo a interface glade
         self.builder.add_from_file('datilografia.glade')
@@ -172,11 +169,30 @@ class Janela:
         texto_professor = prof.get_text(prof.get_start_iter(),
                                         prof.get_end_iter(),
                                         False)
-        if texto_professor:
+        if texto_professor == texto:
+            # apagar e talvez inserir texto do arquivo
+            if self.texto:
+                prof.set_text(self.texto[0])
+                texto_professor = self.texto[0]
+                texto = ''
+                self.texto.pop(0)
+                self.n_word_cache = -1
+            else:
+                prof.delete(prof.get_start_iter(), prof.get_end_iter())
+                if self._arquivo.get_filename():
+                    self._arquivo.unselect_file(self._arquivo.get_file())
+            widget.set_text('')
+            # prof.set_focus()
+        condicoes = [bool(texto_professor),
+                     texto.count(' ') <= texto_professor.count(' '),
+                     texto_professor.count(' ') > 0,
+                     texto.count(' ') != self.n_word_cache]
+        if all(condicoes):
             # colorir texto professor
             prof.set_text('')
             prof.insert_markup(prof.get_end_iter(),
                                colorir(texto_professor, texto.count(' ')), -1)
+            self.n_word_cache = texto.count(' ')
         if texto_professor.startswith(texto) and texto_professor != texto:
             # imagem branca
             self.cache = texto_professor[len(texto):][0]
@@ -200,17 +216,6 @@ class Janela:
             if not self._apagar:
                 imagem = f'{self.local}/imagens/brancas/backspace.png'
                 self.__dict__['_backspace'].set_from_file(imagem)
-        elif texto_professor == texto:
-            # apagar e talvez inserir texto do arquivo
-            if self.texto:
-                prof.set_text(self.texto[0])
-                self.texto.pop(0)
-            else:
-                prof.delete(prof.get_start_iter(), prof.get_end_iter())
-                if self._arquivo.get_filename():    
-                    self._arquivo.unselect_file(self._arquivo.get_file())
-            widget.set_text('')
-            # prof.set_focus()
 
     def professor_digitando(self, widget):
         prof = self._professor_texto
