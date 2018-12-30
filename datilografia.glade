@@ -352,7 +352,7 @@
                   <object class="GtkImage" id="nove">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 9 e parêntese esquerdo ( ( &lt;-shift + 9)</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 9 e parêntese esquerdo  (shift + 9)</property>
                     <property name="pixbuf">imagens/normais/9.png</property>
                   </object>
                   <packing>
@@ -365,7 +365,7 @@
                   <object class="GtkImage" id="zero">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 0 e parêntese direito ( ( &lt;-shift + 0)</property>
+                    <property name="tooltip_text" translatable="yes">esta tecla contém o número 0 e parêntese direito (shift + 0)</property>
                     <property name="pixbuf">imagens/normais/0.png</property>
                   </object>
                   <packing>
@@ -1165,7 +1165,7 @@ inverter um a &gt; A,    A &gt; a,   tab &gt; tab do avesso,    \ &gt; |,    ; &
                   <object class="GtkTextView" id="aluno">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="tooltip_text" translatable="yes">digite o texto para o aluno replicar</property>
+                    <property name="tooltip_text" translatable="yes">aqui o aluno deve replicar o texto.</property>
                     <property name="wrap_mode">word</property>
                     <property name="left_margin">5</property>
                     <property name="buffer">texto_aluno</property>

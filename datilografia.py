@@ -20,6 +20,9 @@ d = {' ': 'espaço', '/': 'barra_direita', '\\': 'barra_esquerda',
      '(': ['sh', '9'], ')': ['sh', '0']
      }
 
+right_shift = '\'12345qwertasdfg\\zxcvb'
+left_shift = '67890-=yuiophjklçnm,.;/~]´['
+
 
 def RD(item):
     """
@@ -34,7 +37,7 @@ def RD(item):
     return (RD(a.lower()) for a in item)
 
 
-def colorir(texto, posicao, cor='yellow3'):
+def colorir(texto, posicao, cor='purple2'):
     texto = texto.split()
     texto[posicao] = f'<span color="{cor}">{texto[posicao]}</span>'
     return ' '.join(texto)
@@ -157,7 +160,7 @@ class Janela:
         self._janela.set_title('programa para aprender a digitar')
 
     def mostrar_imagem(self, widget):
-        var = True if not self._maos.is_visible() else False
+        var = not self._maos.is_visible()
         self._maos.set_visible(var)
 
     def aluno_digitando(self, widget):
@@ -235,7 +238,7 @@ class Janela:
             self._normalizar_imagem()
 
     def auto_apagar_clicado(self, widget):
-        self._apagar = False if self._apagar else True
+        self._apagar = not self._apagar
 
     def _normalizar_imagem(self):
         if self.cache:
@@ -267,8 +270,12 @@ class Janela:
             imagem = f'{self.local}/imagens/{pasta}/{a.lower()}.png'
             quadro.set_from_file(imagem)
         if a.isupper():
-            quadro = self.__dict__['_shift_esquerdo']
-            imagem = f'{self.local}/imagens/{pasta}/shift_esquerdo.png'
+            if a.lower() in right_shift:
+                shift = 'direito'
+            elif a.lower() in left_shift:
+                shift = 'esquerdo'
+            quadro = self.__dict__[f'_shift_{shift}']
+            imagem = f'{self.local}/imagens/{pasta}/shift_{shift}.png'
             quadro.set_from_file(imagem)
 
     def arquivo_escolhido(self, widget):
@@ -280,8 +287,7 @@ class Janela:
         self._arquivo.unselect_file(self._arquivo.get_file())
         # limpar o self.texto, aluno e professor
         self.texto = ''
-        prof = self._professor_texto
-        aluno = self._aluno_texto
+        prof, aluno = self._professor_texto, self._aluno_texto
         prof.delete(prof.get_start_iter(), prof.get_end_iter())
         aluno.delete(aluno.get_start_iter(), aluno.get_end_iter())
 
@@ -291,4 +297,4 @@ if __name__ == '__main__':
     Gtk.main()
 
 
-# limpar o leitor de arquivo quando terminar
+# colorir as mãos quando deve se digitar uma tecla
