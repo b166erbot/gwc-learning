@@ -4,24 +4,28 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
+
+# 'sh': 'shift_esquerdo',
 d = {' ': 'espaço', '/': 'barra_direita', '\\': 'barra_esquerda',
-     '|': ['sh', '\\'], '?': ['sh', '/'],
+     '|': ['\\'], '?': ['/'],
      '[': 'colchete_esquerdo', ']': 'colchete_direito', '\n': 'enter',
-     '{': ['sh', '['], '}': ['sh', ']'], 'sh': 'shift_esquerdo',
+     '{': ['['], '}': [']'],
      '.': 'ponto', ';': 'ponto_virgula', ',': 'virgula', "'": 'aspas',
-     '>': ['sh', '.'], ':': ['sh', ';'], '<': ['sh', ','], '"': ['sh', "'"],
-     'ã': ['til', 'a'], 'õ': ['til', 'o'], 'â': ['sh', 'til', 'a'],
-     'ê': ['sh', 'til', 'e'], 'ô': ['sh', 'til', 'o'], '=': 'igual',
+     '>': ['.'], ':': [';'], '<': [','], '"': ["'"],
+     'ã': ['til', 'a'], 'õ': ['til', 'o'], 'â': ['til', 'a'],
+     'ê': ['til', 'e'], 'ô': ['til', 'o'], '=': 'igual',
      'á': ['agudo', 'a'], 'é': ['agudo', 'e'], 'í': ['agudo', 'i'],
-     'ó': ['agudo', 'o'], 'ú': ['agudo', 'u'], '+': ['sh', '='],
-     'à': ['sh', 'agudo', 'a'], '_': ['sh', '-'], '-': 'menos',
-     '!': ['sh', '1'], '@': ['sh', '2'], '#': ['sh', '3'], '$': ['sh', '4'],
-     '%': ['sh', '5'], '¨': ['sh', '6'], '&': ['sh', '7'], '*': ['sh', '8'],
-     '(': ['sh', '9'], ')': ['sh', '0']
+     'ó': ['agudo', 'o'], 'ú': ['agudo', 'u'], '+': ['='],
+     'à': ['agudo', 'a'], '_': ['-'], '-': 'menos',
+     '!': ['1'], '@': ['2'], '#': ['3'], '$': ['4'],
+     '%': ['5'], '¨': ['6'], '&': ['7'], '*': ['8'],
+     '(': ['9'], ')': ['0']
      }
 
 right_shift = '\'12345qwertasdfg\\zxcvb'
 left_shift = '67890-=yuiophjklçnm,.;/~]´['
+dedos = ['\'1qaz\\', '2wsx', '3edc', '45rtfgvb', '0pç;/~^´`-_=+[]{}\n', '9ol.',
+         '8ik,', '67yuhjnm']
 
 
 def RD(item):
@@ -37,7 +41,10 @@ def RD(item):
     return (RD(a.lower()) for a in item)
 
 
-def colorir(texto, posicao, cor='purple2'):
+def colorir(texto, posicao, cor='green1'):
+    """
+    Função que colore um texto em uma determinada posição.
+    """
     texto = texto.split()
     texto[posicao] = f'<span color="{cor}">{texto[posicao]}</span>'
     return ' '.join(texto)
@@ -146,6 +153,8 @@ class Janela:
         self._professor = self.builder.get_object('professor')
         self._arquivo = self.builder.get_object('arquivo')
         self._limpar_arquivo = self.builder.get_object('limpar_arquivo')
+        self._popover = self.builder.get_object('popover')
+        self._poplabel = self.builder.get_object('poplabel')
 
         # conectando objetos.
         self._janela.connect('destroy', Gtk.main_quit)
@@ -166,8 +175,7 @@ class Janela:
     def aluno_digitando(self, widget):
         self._normalizar_imagem()
         prof = self._professor_texto
-        texto = widget.get_text(widget.get_start_iter(),
-                                widget.get_end_iter(),
+        texto = widget.get_text(widget.get_start_iter(), widget.get_end_iter(),
                                 False)
         texto_professor = prof.get_text(prof.get_start_iter(),
                                         prof.get_end_iter(),
@@ -185,7 +193,6 @@ class Janela:
                 if self._arquivo.get_filename():
                     self._arquivo.unselect_file(self._arquivo.get_file())
             widget.set_text('')
-            # prof.set_focus()
         condicoes = [bool(texto_professor),
                      texto.count(' ') <= texto_professor.count(' '),
                      texto_professor.count(' ') > 0,
@@ -269,6 +276,15 @@ class Janela:
         if quadro:
             imagem = f'{self.local}/imagens/{pasta}/{a.lower()}.png'
             quadro.set_from_file(imagem)
+            if pasta != 'normais':
+                texto = ''
+                for b in dedos:
+                    if a.lower() in b:
+                        texto = str(dedos.index(b)%4+1)
+                if texto:
+                    self._mostrar_popup(quadro, texto)
+            else:
+                self._popover.hide()
         if a.isupper():
             if a.lower() in right_shift:
                 shift = 'direito'
@@ -290,6 +306,13 @@ class Janela:
         prof, aluno = self._professor_texto, self._aluno_texto
         prof.delete(prof.get_start_iter(), prof.get_end_iter())
         aluno.delete(aluno.get_start_iter(), aluno.get_end_iter())
+        self._popover.hide()
+
+    def _mostrar_popup(self, tecla, texto):
+        self._popover.hide()
+        self._poplabel.set_text('dedo: ' + texto)
+        self._popover.set_relative_to(tecla)
+        self._popover.show()
 
 
 if __name__ == '__main__':
