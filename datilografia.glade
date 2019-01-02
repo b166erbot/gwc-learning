@@ -1205,11 +1205,13 @@ inverter um a &gt; A,    A &gt; a,   tab &gt; tab do avesso,    \ &gt; |,    ; &
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">center</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_bottom">1</property>
                     <property name="label" translatable="yes">Adicione um arquivo
 e comece a digitar
 por ele.</property>
@@ -1231,7 +1233,7 @@ por ele.</property>
                     <property name="preview_widget_active">False</property>
                     <property name="use_preview_label">False</property>
                     <property name="title" translatable="yes"/>
-                    <property name="width_chars">8</property>
+                    <property name="width_chars">5</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -1246,7 +1248,7 @@ arquivo</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="focus_on_click">False</property>
-                    <property name="receives_default">True</property>
+                    <property name="receives_default">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -1258,13 +1260,14 @@ arquivo</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">center</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkCheckButton" id="mostrar_maos">
@@ -1302,7 +1305,53 @@ arquivo</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">3</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">center</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">2</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">jogos</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText">
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="can_focus">False</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="active">0</property>
+                    <items>
+                      <item id="0" translatable="yes">Nenhum</item>
+                      <item id="1" translatable="yes">Adivinhe a tecla</item>
+                      <item id="2" translatable="yes">Acerte a tecla</item>
+                      <item id="3" translatable="yes">Digite palavras</item>
+                    </items>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
