@@ -1,8 +1,8 @@
-"""Datilografia testes."""
+"""gnome write correctly testes."""
 
 
 from unittest import main, TestCase
-from datilografia import *
+from gwc import *
 
 
 class Testes(TestCase):

@@ -1,4 +1,3 @@
-#!/usr/bin/python3.6
 from os import getcwd
 import gi
 gi.require_version('Gtk', '3.0')
@@ -6,31 +5,30 @@ from gi.repository import Gtk  # noqa
 
 
 d = {' ': 'espaço', '/': 'barra_direita', '\\': 'barra_esquerda',
-     '|': ['\\'], '?': ['/'],
-     '[': 'colchete_esquerdo', ']': 'colchete_direito', '\n': 'enter',
-     '{': ['['], '}': [']'],
+     '|': ['\\'], '?': ['/'], '[': 'colchete_esquerdo',
+     ']': 'colchete_direito', '\n': 'enter', '{': ['['], '}': [']'],
      '.': 'ponto', ';': 'ponto_virgula', ',': 'virgula', "'": 'aspas',
-     '>': ['.'], ':': [';'], '<': [','], '"': ["'"],
-     'ã': ['til', 'a'], 'õ': ['til', 'o'], 'â': ['til', 'a'],
-     'ê': ['til', 'e'], 'ô': ['til', 'o'], '=': 'igual',
-     'á': ['agudo', 'a'], 'é': ['agudo', 'e'], 'í': ['agudo', 'i'],
-     'ó': ['agudo', 'o'], 'ú': ['agudo', 'u'], '+': ['='],
-     'à': ['agudo', 'a'], '_': ['-'], '-': 'menos',
-     '!': ['1'], '@': ['2'], '#': ['3'], '$': ['4'],
-     '%': ['5'], '¨': ['6'], '&': ['7'], '*': ['8'],
-     '(': ['9'], ')': ['0']
-     }
+     '>': ['.'], ':': [';'], '<': [','], '"': ["'"], 'ã': ['~', 'a'],
+     'õ': ['~', 'o'], 'â': ['~', 'a'], 'ê': ['~', 'e'], 'ô': ['~', 'o'],
+     '=': 'igual', 'á': ['´', 'a'], 'é': ['´', 'e'], 'í': ['´', 'i'],
+     'ó': ['´', 'o'], 'ú': ['´', 'u'], '+': ['='], 'à': ['´', 'a'], '_': ['-'],
+     '-': 'menos', '!': ['1'], '@': ['2'], '#': ['3'], '$': ['4'], '%': ['5'],
+     '¨': ['6'], '&': ['7'], '*': ['8'], '(': ['9'], ')': ['0'], '´': 'agudo',
+     '~': 'til'}
 
 right_shift = '\'12345qwertasdfg\\zxcvb'
 left_shift = '67890-=yuiophjklçnm,.;/~]´['
 dedos = ['\'1qaz\\', '2wsx', '3edc', '45rtfgvb', '0pç;/~^´`-_=+[]{}\n', '9ol.',
          '8ik,', '67yuhjnm']
-# bug no enter, era para ser monitorado
+# bug no enter, backspace, era para serem monitorados
+jogo1 = list('abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\')
 
 
 def dr(item):
     """
     Função de recursividade que retorna um gerador do dicionário d.
+    Este gerador tem a função de retornar parte do nome da imagem à ser
+    carregada.
     """
     if isinstance(item, str) and item.lower() in d:
         return dr(d.get(item.lower(), item.lower()))
@@ -59,9 +57,10 @@ class Janela:
         self.local = getcwd()
         self.texto = []
         self.n_word_cache = -1
+        self.jogo_escolhido = '0'
 
         # obtendo a interface glade
-        self.builder.add_from_file('datilografia.glade')
+        self.builder.add_from_file('gwc.glade')
 
         # obtendo objetos.
         self._janela = self.builder.get_object('janela')
@@ -152,6 +151,7 @@ class Janela:
         self._limpar_arquivo = self.builder.get_object('limpar_arquivo')
         self._popover = self.builder.get_object('popover')
         self._poplabel = self.builder.get_object('poplabel')
+        self._jogos = self.builder.get_object('jogos')
 
         # conectando objetos.
         self._janela.connect('destroy', Gtk.main_quit)
@@ -161,6 +161,7 @@ class Janela:
         self._auto_apagar.connect('toggled', self.auto_apagar_clicado)
         self._arquivo.connect('file-set', self.arquivo_escolhido)
         self._limpar_arquivo.connect('clicked', self.remover_arquivo)
+        self._jogos.connect('changed', self.jogo_alterado)
 
         # configurando.
         self._janela.set_title('programa para aprender a digitar')
@@ -190,16 +191,7 @@ class Janela:
                 if self._arquivo.get_filename():
                     self._arquivo.unselect_file(self._arquivo.get_file())
             widget.set_text('')
-        condicoes = [bool(texto_professor),
-                     texto.count(' ') <= texto_professor.count(' '),
-                     texto_professor.count(' ') > 0,
-                     texto.count(' ') != self.n_word_cache]
-        if all(condicoes):
-            # colorir texto professor
-            prof.set_text('')
-            prof.insert_markup(prof.get_end_iter(),
-                               colorir(texto_professor, texto.count(' ')), -1)
-            self.n_word_cache = texto.count(' ')
+        self._colorir_texto(prof, texto_professor, texto)
         if texto_professor.startswith(texto) and texto_professor != texto:
             # imagem branca
             self.cache = texto_professor[len(texto):][0]
@@ -311,10 +303,37 @@ class Janela:
         self._popover.set_relative_to(tecla)
         self._popover.show()
 
+    def jogo_alterado(self, widget):
+        self.jogo_escolhido = id_jogos = widget.get_active_id()
+        if id_jogos == '0':
+            for a in jogo1:
+                self.cache = a
+                self._normalizar_imagem()
+        elif id_jogos == '1':
+            for a in jogo1:
+                quadro = self.__dict__.get('_' + dr(a.lower()), None)
+                imagem = f'{self.local}/imagens/?/pequenas.png'
+                quadro.set_from_file(imagem)
+        elif id_jogos == '2':
+            print(2)
+        elif id_jogos == '3':
+            print(3)
 
-if __name__ == '__main__':
-    app = Janela()  # NOQA
-    Gtk.main()  # NOQA
+    def _colorir_texto(self, prof, texto_p, texto):
+        condicoes = [bool(texto_p),
+                     texto.count(' ') <= texto_p.count(' '),
+                     texto_p.count(' ') > 0,
+                     texto.count(' ') != self.n_word_cache]
+        if all(condicoes):
+            prof.set_text('')
+            prof.insert_markup(prof.get_end_iter(),
+                               colorir(texto_p, texto.count(' ')), -1)
+            self.n_word_cache = texto.count(' ')
+
+
+def main():
+    app = Janela()  # noqa
+    Gtk.main()
 
 
 # jogos:

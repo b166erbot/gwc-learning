@@ -1,1 +1,1 @@
-from .testes_datilografia import *  # noqa
+from .testes_gwc import *  # noqa
