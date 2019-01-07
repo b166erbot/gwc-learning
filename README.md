@@ -1,7 +1,7 @@
 # gwc-learning: gnome write correctly
 um programa para minha mãe aprender a digitar
 
-bibliotecas necessárias:
+dependências:
     gi -> sudo apt-get install python3-gi
 
 programas usados:

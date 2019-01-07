@@ -1202,7 +1202,7 @@ inverter um a &gt; A,    A &gt; a,   tab &gt; tab do avesso,    \ &gt; |,    ; &
             <property name="orientation">vertical</property>
             <property name="spacing">20</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="area_arquivo">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
@@ -1233,7 +1233,7 @@ por ele.</property>
                     <property name="preview_widget_active">False</property>
                     <property name="use_preview_label">False</property>
                     <property name="title" translatable="yes"/>
-                    <property name="width_chars">5</property>
+                    <property name="width_chars">3</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -1338,6 +1338,7 @@ arquivo</property>
                       <item id="1" translatable="yes">Adivinhe a tecla</item>
                       <item id="2" translatable="yes">Acerte a tecla</item>
                       <item id="3" translatable="yes">Digite palavras</item>
+                      <item id="4" translatable="yes">Treinar acentos</item>
                     </items>
                   </object>
                   <packing>
@@ -1347,7 +1348,7 @@ arquivo</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="niveis">
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
@@ -1365,6 +1366,7 @@ arquivo</property>
                     <child>
                       <object class="GtkComboBoxText">
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
                         <property name="focus_on_click">False</property>
                         <property name="active">0</property>

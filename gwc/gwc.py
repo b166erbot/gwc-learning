@@ -1,26 +1,31 @@
 from os import getcwd
 import gi
+from random import choice
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk  # noqa
 
 
 d = {' ': 'espaço', '/': 'barra_direita', '\\': 'barra_esquerda',
-     '|': ['\\'], '?': ['/'], '[': 'colchete_esquerdo',
-     ']': 'colchete_direito', '\n': 'enter', '{': ['['], '}': [']'],
-     '.': 'ponto', ';': 'ponto_virgula', ',': 'virgula', "'": 'aspas',
-     '>': ['.'], ':': [';'], '<': [','], '"': ["'"], 'ã': ['~', 'a'],
-     'õ': ['~', 'o'], 'â': ['~', 'a'], 'ê': ['~', 'e'], 'ô': ['~', 'o'],
-     '=': 'igual', 'á': ['´', 'a'], 'é': ['´', 'e'], 'í': ['´', 'i'],
-     'ó': ['´', 'o'], 'ú': ['´', 'u'], '+': ['='], 'à': ['´', 'a'], '_': ['-'],
-     '-': 'menos', '!': ['1'], '@': ['2'], '#': ['3'], '$': ['4'], '%': ['5'],
-     '¨': ['6'], '&': ['7'], '*': ['8'], '(': ['9'], ')': ['0'], '´': 'agudo',
-     '~': 'til'}
+     'sh': 'shift_esquerdo', 'sh2': 'shift_direito', '|': ['sh2', '\\'],
+     '?': ['sh2', '/'], '[': 'colchete_esquerdo', ']': 'colchete_direito',
+     '\n': 'enter', '{': ['sh', '['], '}': ['sh', ']'], '.': 'ponto',
+     ';': 'ponto_virgula', ',': 'virgula', "'": 'aspas', '^': ['sh', '~'],
+     '>': ['sh', '.'], ':': ['sh', ';'], '<': ['sh', ','], '"': ['sh', "'"],
+     'ã': ['~', 'a'], 'õ': ['~', 'o'], 'â': ['~', 'sh', 'a'],
+     'ê': ['~', 'sh', 'e'], 'ô': ['~', 'sh', 'o'], '=': 'igual',
+     'á': ['´', 'a'], 'é': ['´', 'e'], 'í': ['´', 'i'], 'ó': ['´', 'o'],
+     'ú': ['´', 'u'], '+': ['sh', '='], 'à': ['´', 'sh', 'a'],
+     '_': ['sh', '-'], '-': 'menos', '!': ['sh', '1'], '@': ['sh2', '2'],
+     '#': ['sh2', '3'], '$': ['sh2', '4'], '%': ['sh2', '5'], '¨': ['sh', '6'],
+     '&': ['sh', '7'], '*': ['sh', '8'], '(': ['sh', '9'], ')': ['sh', '0'],
+     '´': 'agudo', '~': 'til', '`': ['sh', '´']}
 
-right_shift = '\'12345qwertasdfg\\zxcvb'
-left_shift = '67890-=yuiophjklçnm,.;/~]´['
-dedos = ['\'1qaz\\', '2wsx', '3edc', '45rtfgvb', '0pç;/~^´`-_=+[]{}\n', '9ol.',
-         '8ik,', '67yuhjnm']
-# bug no enter, backspace, era para serem monitorados
+right_shift = 'qwertasdfgzxcvb'
+left_shift = 'yuiophjklçnm'
+lr = right_shift + left_shift
+dedos = ['\'"1qaz\\|', '2wsx', '3edc', '45rtfgvb', '0pç;:/?~^´`-_=+[]{}\n',
+         '9ol>.', '8ik<,', '67yuhjnm']
+# bug no espaço. era para serem monitorados   ## BACKSPACE NÃO É PARA MOSTRAR.
 jogo1 = list('abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\')
 
 
@@ -41,7 +46,7 @@ def colorir(texto, posicao, cor='green1'):
     """
     Função que colore um texto em uma determinada posição.
     """
-    texto = texto.split()
+    texto = texto.split(' ')
     texto[posicao] = f'<span color="{cor}">{texto[posicao]}</span>'
     return ' '.join(texto)
 
@@ -152,6 +157,8 @@ class Janela:
         self._popover = self.builder.get_object('popover')
         self._poplabel = self.builder.get_object('poplabel')
         self._jogos = self.builder.get_object('jogos')
+        self._niveis = self.builder.get_object('niveis')
+        self._area_arquivo = self.builder.get_object('area_arquivo')
 
         # conectando objetos.
         self._janela.connect('destroy', Gtk.main_quit)
@@ -171,50 +178,39 @@ class Janela:
         self._maos.set_visible(var)
 
     def aluno_digitando(self, widget):
-        self._normalizar_imagem()
         prof = self._professor_texto
         texto = widget.get_text(widget.get_start_iter(), widget.get_end_iter(),
                                 False)
         texto_professor = prof.get_text(prof.get_start_iter(),
-                                        prof.get_end_iter(),
-                                        False)
+                                        prof.get_end_iter(), False)
+        if int(self._jogos.get_active_id()):
+            return self._jogo(texto)
+        self._normalizar_imagem()
         if texto_professor == texto:
             # apagar e talvez inserir texto do arquivo
-            if self.texto:
+            if not self.texto:
+                self.remover_arquivo(None)
+            else:
                 prof.set_text(self.texto[0])
                 texto_professor = self.texto[0]
                 texto = ''
                 self.texto.pop(0)
                 self.n_word_cache = -1
-            else:
-                prof.delete(prof.get_start_iter(), prof.get_end_iter())
-                if self._arquivo.get_filename():
-                    self._arquivo.unselect_file(self._arquivo.get_file())
             widget.set_text('')
-        self._colorir_texto(prof, texto_professor, texto)
-        if texto_professor.startswith(texto) and texto_professor != texto:
+        elif texto_professor.startswith(texto) and texto_professor != texto:
             # imagem branca
             self.cache = texto_professor[len(texto):][0]
-            rd = dr(self.cache)
-            if isinstance(rd, str):
-                self._definir_imagem(rd, 'brancas')
-            else:
-                for a in rd:
-                    self._definir_imagem(a, 'brancas')
+            self._definir_imagem(self.cache, 'brancas')
         elif not texto_professor.startswith(texto):
             # imagem vermelha
-            if texto and self._apagar:
+            if all([texto, self._apagar]):
                 self._aluno.do_backspace(self._aluno)
-            self.red_cache = texto[-1]
-            rd = dr(self.red_cache)
-            if isinstance(rd, str):
-                self._definir_imagem(rd, 'vermelhas')
             else:
-                for a in rd:
-                    self._definir_imagem(a, 'vermelhas')
-            if not self._apagar:
                 imagem = f'{self.local}/imagens/brancas/backspace.png'
                 self.__dict__['_backspace'].set_from_file(imagem)
+            self.red_cache = texto[-1]
+            self._definir_imagem(self.red_cache, 'vermelhas')
+        self._colorir_texto(prof, texto_professor, texto)
 
     def professor_digitando(self, widget):
         prof = self._professor_texto
@@ -224,64 +220,52 @@ class Janela:
         if len(texto_professor) == 1:
             self._normalizar_imagem()
             self.cache = self.prof_cache = texto_professor[0]
-            rd = dr(self.prof_cache)
-            if isinstance(rd, str):
-                self._definir_imagem(rd, 'brancas')
-            else:
-                for a in rd:
-                    self._definir_imagem(a, 'brancas')
+            self._definir_imagem(self.prof_cache, 'brancas')
         elif not texto_professor:
             self._normalizar_imagem()
+            self._popover.hide()
+            self._poplabel.set_text('')
 
     def auto_apagar_clicado(self, widget):
         self._apagar = not self._apagar
 
     def _normalizar_imagem(self):
         if self.cache:
-            rd = dr(self.cache)
-            if isinstance(rd, str):
-                self._definir_imagem(rd, 'normais')
-            else:
-                for a in rd:
-                    self._definir_imagem(a, 'normais')
+            self._definir_imagem(self.cache, 'normais')
+            self.cache = ''
         if self.red_cache:
-            rd = dr(self.red_cache)
-            if isinstance(rd, str):
-                self._definir_imagem(rd, 'normais')
-            else:
-                for a in rd:
-                    self._definir_imagem(a, 'normais')
+            self._definir_imagem(self.red_cache, 'normais')
             self._definir_imagem('backspace', 'normais')
+            self.red_cache = ''
         if self.prof_cache:
-            rd = dr(self.prof_cache)
-            if isinstance(rd, str):
-                self._definir_imagem(rd, 'normais')
-            else:
-                for a in rd:
-                    self._definir_imagem(a, 'normais')
+            self._definir_imagem(self.prof_cache, 'normais')
+            self.prof_cache = ''
 
     def _definir_imagem(self, a, pasta):
-        quadro = self.__dict__.get('_' + a.lower(), '')
-        if quadro:
-            imagem = f'{self.local}/imagens/{pasta}/{a.lower()}.png'
-            quadro.set_from_file(imagem)
-            if pasta == 'brancas':
-                texto = ''
-                for b in dedos:
-                    if a.lower() in b:
-                        texto = str(dedos.index(b) % 4 + 1)
-                if texto:
-                    self._mostrar_popup(quadro, texto)
+        rd = dr(a)
+        if isinstance(rd, str):
+            rd = [rd]
+        for b in rd:
+            quadro = self.__dict__.get('_' + b.lower(), '')
+            imagem = f'{self.local}/imagens/{pasta}/{b.lower()}.png'
+            quadro and quadro.set_from_file(imagem)  # noqa
+        if pasta == 'brancas':
+            self._dedos(a, b, quadro)
+        if all([a.isupper(), a.lower() in lr]):
+            if b.lower() in right_shift:
+              shift = 'direito'
             else:
-                self._popover.hide()
-        if a.isupper():
-            if a.lower() in right_shift:
-                shift = 'direito'
-            elif a.lower() in left_shift:
-                shift = 'esquerdo'
+              shift = 'esquerdo'
             quadro = self.__dict__[f'_shift_{shift}']
             imagem = f'{self.local}/imagens/{pasta}/shift_{shift}.png'
             quadro.set_from_file(imagem)
+
+    def _dedos(self, a, b, quadro):
+        for c in dedos:
+            if b.lower() in c or a.lower() in c:
+                texto = str(dedos.index(c) % 4 + 1)
+                self._mostrar_popup(quadro, texto)
+        # botar o espaço e o backspace aqui?
 
     def arquivo_escolhido(self, widget):
         with open(widget.get_filename(), 'r') as f:
@@ -289,7 +273,8 @@ class Janela:
         self.aluno_digitando(self._aluno_texto)
 
     def remover_arquivo(self, widget):
-        self._arquivo.unselect_file(self._arquivo.get_file())
+        if self._arquivo.get_filename():
+            self._arquivo.unselect_file(self._arquivo.get_file())
         # limpar o self.texto, aluno e professor
         self.texto = ''
         prof, aluno = self._professor_texto, self._aluno_texto
@@ -304,20 +289,18 @@ class Janela:
         self._popover.show()
 
     def jogo_alterado(self, widget):
-        self.jogo_escolhido = id_jogos = widget.get_active_id()
-        if id_jogos == '0':
-            for a in jogo1:
-                self.cache = a
-                self._normalizar_imagem()
-        elif id_jogos == '1':
-            for a in jogo1:
-                quadro = self.__dict__.get('_' + dr(a.lower()), None)
-                imagem = f'{self.local}/imagens/?/pequenas.png'
-                quadro.set_from_file(imagem)
-        elif id_jogos == '2':
-            print(2)
-        elif id_jogos == '3':
-            print(3)
+        self.remover_arquivo(None)
+        self.jogo_escolhido = widget.get_active_id()
+        if self.jogo_escolhido == '0':
+            self._normalizar_imagem()
+            self._niveis.set_visible(False)
+            self._professor.set_sensitive(True)
+            self._area_arquivo.set_sensitive(True)
+        else:
+            self._niveis.set_visible(True)
+            self._professor.set_sensitive(False)
+            self._area_arquivo.set_sensitive(False)
+        self.aluno_digitando(self._aluno_texto)
 
     def _colorir_texto(self, prof, texto_p, texto):
         condicoes = [bool(texto_p),
@@ -330,11 +313,27 @@ class Janela:
                                colorir(texto_p, texto.count(' ')), -1)
             self.n_word_cache = texto.count(' ')
 
+    def _jogo(self, texto=None): # tem que revisionar isso, alterei o código.
+        if self.jogo_escolhido == '1':
+            if texto == self.cache:
+                self._normalizar_imagem()
+                self.cache = a = choice(jogo1)
+                quadro = self.__dict__.get('_' + dr(a), None)
+                imagem = f'{self.local}/imagens/?/pequenas.png'
+                quadro.set_from_file(imagem)
+                self._aluno_texto.set_text('')
+
 
 def main():
     app = Janela()  # noqa
     Gtk.main()
 
+
+# testes no self._jogo
+# tirei o shift do dicionário, terei que por novamente? como resolver os números
+# passar o a para o dr já em lower e remover os lowers do dr
+# mostrar imagem do procedimento com o shift? mostrar essa imagem no jogo?
+# bug tentando replicar e em seguida apagar o '\n '
 
 # jogos:
 # aperte a tecla antes que ela desapareça
