@@ -1,6 +1,7 @@
 from os import getcwd
 import gi
 from random import choice
+from pdb import set_trace
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk  # noqa
 
@@ -25,7 +26,6 @@ left_shift = 'yuiophjklçnm'
 lr = right_shift + left_shift
 dedos = ['\'"1qaz\\|', '2wsx', '3edc', '45rtfgvb', '0pç;:/?~^´`-_=+[]{}\n',
          '9ol>.', '8ik<,', '67yuhjnm']
-# bug no espaço. era para serem monitorados   ## BACKSPACE NÃO É PARA MOSTRAR.
 jogo1 = list('abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\')
 
 
@@ -163,8 +163,9 @@ class Janela:
         # conectando objetos.
         self._janela.connect('destroy', Gtk.main_quit)
         self._mostrar_maos.connect('toggled', self.mostrar_imagem)
-        self._aluno_texto.connect('changed', self.aluno_digitando)
-        self._professor_texto.connect('changed', self.professor_digitando)
+        self._aluno_texto.connect('end-user-action', self.aluno_digitando)
+        self._professor_texto.connect('end-user-action',
+                                      self.professor_digitando)
         self._auto_apagar.connect('toggled', self.auto_apagar_clicado)
         self._arquivo.connect('file-set', self.arquivo_escolhido)
         self._limpar_arquivo.connect('clicked', self.remover_arquivo)
@@ -192,6 +193,7 @@ class Janela:
                 self.remover_arquivo(None)
             else:
                 prof.set_text(self.texto[0])
+                self.professor_digitando(self._professor_texto)
                 texto_professor = self.texto[0]
                 texto = ''
                 self.texto.pop(0)
@@ -217,7 +219,7 @@ class Janela:
         texto_professor = prof.get_text(prof.get_start_iter(),
                                         prof.get_end_iter(),
                                         False)
-        if len(texto_professor) == 1:
+        if len(texto_professor) == 1 or self.texto:
             self._normalizar_imagem()
             self.cache = self.prof_cache = texto_professor[0]
             self._definir_imagem(self.prof_cache, 'brancas')
@@ -254,7 +256,7 @@ class Janela:
         if all([a.isupper(), a.lower() in lr]):
             if b.lower() in right_shift:
               shift = 'direito'
-            else:
+            elif b.lower() in left_shift:
               shift = 'esquerdo'
             quadro = self.__dict__[f'_shift_{shift}']
             imagem = f'{self.local}/imagens/{pasta}/shift_{shift}.png'
@@ -265,7 +267,8 @@ class Janela:
             if b.lower() in c or a.lower() in c:
                 texto = str(dedos.index(c) % 4 + 1)
                 self._mostrar_popup(quadro, texto)
-        # botar o espaço e o backspace aqui?
+        if a == ' ':
+            self._mostrar_popup(quadro, '5')
 
     def arquivo_escolhido(self, widget):
         with open(widget.get_filename(), 'r') as f:
@@ -329,11 +332,8 @@ def main():
     Gtk.main()
 
 
-# testes no self._jogo
-# tirei o shift do dicionário, terei que por novamente? como resolver os números
-# passar o a para o dr já em lower e remover os lowers do dr
 # mostrar imagem do procedimento com o shift? mostrar essa imagem no jogo?
-# bug tentando replicar e em seguida apagar o '\n '
+# bug no pós-termino e início de uma frase, o caracter não aparece
 
 # jogos:
 # aperte a tecla antes que ela desapareça

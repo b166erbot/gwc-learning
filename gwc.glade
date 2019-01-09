@@ -1227,7 +1227,7 @@ por ele.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="focus_on_click">False</property>
-                    <property name="tooltip_text" translatable="yes">abrir arquivo ao qual o programa exibirá os caracters para o aluno digitar</property>
+                    <property name="tooltip_text" translatable="yes">abrir arquivo ao qual o programa exibirá os caracters para digitar</property>
                     <property name="create_folders">False</property>
                     <property name="do_overwrite_confirmation">True</property>
                     <property name="preview_widget_active">False</property>
