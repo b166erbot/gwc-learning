@@ -1,10 +1,9 @@
 from os import getcwd
-import gi
+import pgi
 from random import choice
 from pdb import set_trace
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk  # noqa
-
+pgi.require_version('Gtk', '3.0')
+from pgi.repository import Gtk  # noqa
 
 d = {' ': 'espaço', '/': 'barra_direita', '\\': 'barra_esquerda',
      'sh': 'shift_esquerdo', 'sh2': 'shift_direito', '|': ['sh2', '\\'],
@@ -21,12 +20,13 @@ d = {' ': 'espaço', '/': 'barra_direita', '\\': 'barra_esquerda',
      '&': ['sh', '7'], '*': ['sh', '8'], '(': ['sh', '9'], ')': ['sh', '0'],
      '´': 'agudo', '~': 'til', '`': ['sh', '´']}
 
-right_shift = 'qwertasdfgzxcvb'
-left_shift = 'yuiophjklçnm'
+right_shift = 'qwertasdfgzxcvbãáâàêé'
+left_shift = 'yuiophjklçnmíõôóú'
 lr = right_shift + left_shift
 dedos = ['\'"1qaz\\|', '2wsx', '3edc', '45rtfgvb', '0pç;:/?~^´`-_=+[]{}\n',
          '9ol>.', '8ik<,', '67yuhjnm']
-jogo1 = list('abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\')
+jogo1 = 'abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\'
+jogo4 = 'ãêáõôéâíóúà`´~^' + 'ãêáõôéâíóúà'.upper()
 
 
 def dr(item):
@@ -159,6 +159,7 @@ class Janela:
         self._jogos = self.builder.get_object('jogos')
         self._niveis = self.builder.get_object('niveis')
         self._area_arquivo = self.builder.get_object('area_arquivo')
+        self._area_opcoes = self.builder.get_object('area_opcoes')
 
         # conectando objetos.
         self._janela.connect('destroy', Gtk.main_quit)
@@ -185,7 +186,7 @@ class Janela:
         texto_professor = prof.get_text(prof.get_start_iter(),
                                         prof.get_end_iter(), False)
         if int(self._jogos.get_active_id()):
-            return self._jogo(texto)
+            return self._jogo(texto[-1:])
         self._normalizar_imagem()
         if texto_professor == texto:
             # apagar e talvez inserir texto do arquivo
@@ -209,7 +210,7 @@ class Janela:
                 self._aluno.do_backspace(self._aluno)
             else:
                 imagem = f'{self.local}/imagens/brancas/backspace.png'
-                self.__dict__['_backspace'].set_from_file(imagem)
+                getattr(self, '_backspace').set_from_file(imagem)
             self.red_cache = texto[-1]
             self._definir_imagem(self.red_cache, 'vermelhas')
         self._colorir_texto(prof, texto_professor, texto)
@@ -248,7 +249,7 @@ class Janela:
         if isinstance(rd, str):
             rd = [rd]
         for b in rd:
-            quadro = self.__dict__.get('_' + b.lower(), '')
+            quadro = getattr(self, '_' + b.lower(), '')
             imagem = f'{self.local}/imagens/{pasta}/{b.lower()}.png'
             quadro and quadro.set_from_file(imagem)  # noqa
         if pasta == 'brancas':
@@ -258,7 +259,7 @@ class Janela:
               shift = 'direito'
             elif b.lower() in left_shift:
               shift = 'esquerdo'
-            quadro = self.__dict__[f'_shift_{shift}']
+            quadro = getattr(self, f'_shift_{shift}')
             imagem = f'{self.local}/imagens/{pasta}/shift_{shift}.png'
             quadro.set_from_file(imagem)
 
@@ -278,7 +279,8 @@ class Janela:
     def remover_arquivo(self, widget):
         if self._arquivo.get_filename():
             self._arquivo.unselect_file(self._arquivo.get_file())
-        # limpar o self.texto, aluno e professor
+        # limpar o self.texto, aluno e professor, normalizar as imagens
+        self._normalizar_imagem()
         self.texto = ''
         prof, aluno = self._professor_texto, self._aluno_texto
         prof.delete(prof.get_start_iter(), prof.get_end_iter())
@@ -299,10 +301,14 @@ class Janela:
             self._niveis.set_visible(False)
             self._professor.set_sensitive(True)
             self._area_arquivo.set_sensitive(True)
+            self._area_opcoes.set_sensitive(True)
         else:
             self._niveis.set_visible(True)
             self._professor.set_sensitive(False)
             self._area_arquivo.set_sensitive(False)
+            self._area_opcoes.set_sensitive(False)
+            self._auto_apagar.set_active(False)
+            self._mostrar_maos.set_active(False)
         self.aluno_digitando(self._aluno_texto)
 
     def _colorir_texto(self, prof, texto_p, texto):
@@ -316,15 +322,19 @@ class Janela:
                                colorir(texto_p, texto.count(' ')), -1)
             self.n_word_cache = texto.count(' ')
 
-    def _jogo(self, texto=None): # tem que revisionar isso, alterei o código.
-        if self.jogo_escolhido == '1':
-            if texto == self.cache:
-                self._normalizar_imagem()
-                self.cache = a = choice(jogo1)
-                quadro = self.__dict__.get('_' + dr(a), None)
+    def _jogo(self, texto):
+        if texto == self.cache:
+            self._normalizar_imagem()
+            if self.jogo_escolhido == '1':
+                self.cache = choice(jogo1)
+                quadro = getattr(self, '_' + dr(self.cache), '')
                 imagem = f'{self.local}/imagens/?/pequenas.png'
                 quadro.set_from_file(imagem)
-                self._aluno_texto.set_text('')
+            elif self.jogo_escolhido == '4':
+                self.cache = choice(jogo4)
+                self._definir_imagem(self.cache, 'brancas')
+                self._professor_texto.set_text(self.cache)
+        self._aluno_texto.set_text(texto)
 
 
 def main():
@@ -333,7 +343,6 @@ def main():
 
 
 # mostrar imagem do procedimento com o shift? mostrar essa imagem no jogo?
-# bug no pós-termino e início de uma frase, o caracter não aparece
 
 # jogos:
 # aperte a tecla antes que ela desapareça
