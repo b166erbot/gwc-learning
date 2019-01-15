@@ -2,7 +2,7 @@
 Gnome Writer Corretly - Learning
 ================================
 
-:Author: Bernardo Freitas <http://github.com/bernardofreitas>
+:Author: Bernardo Freitas `<//github.com/bernardofreitas>`
 
 Requirements:
 =============
@@ -24,7 +24,7 @@ Used programs:
 Contributors:
 =============
 
-    - Bernardo Freitas <http://github.com/bernardofreitas>
+    - Bernardo Freitas `<//github.com/bernardofreitas>`
 
 Source image:
 =============
