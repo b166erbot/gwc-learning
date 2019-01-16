@@ -2,12 +2,12 @@
 Gnome Writer Corretly - Learning
 ================================
 
-:Author: Bernardo Freitas <http://github.com/bernardofreitas>
+:Author: `Bernardo Freitas <http://github.com/bernardofreitas>`_
 
 Requirements:
 =============
 
-    - pgi
+    - gi -> sudo apt-get install python3-gi
     * To install execute: pip3 install -r requirements.txt
 
 Python version:
@@ -24,7 +24,7 @@ Used programs:
 Contributors:
 =============
 
-    - Bernardo Freitas <http://github.com/bernardofreitas>
+    - `Bernardo Freitas <http://github.com/bernardofreitas>`_
 
 Source image:
 =============

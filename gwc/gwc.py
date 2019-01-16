@@ -1,9 +1,12 @@
 from os import getcwd
-import pgi
+import gi
 from random import choice
+from time import sleep
 from pdb import set_trace
-pgi.require_version('Gtk', '3.0')
-from pgi.repository import Gtk  # noqa
+from thread import Jogo2, App
+from gi.repository import Pango
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk  # noqa
 
 d = {' ': 'espaço', '/': 'barra_direita', '\\': 'barra_esquerda',
      'sh': 'shift_esquerdo', 'sh2': 'shift_direito', '|': ['sh2', '\\'],
@@ -52,8 +55,10 @@ def colorir(texto, posicao, cor='green1'):
 
 
 class Janela:
-    def __init__(self):
+    def __init__(self, thread):
         # criando objetos.
+        pango = Pango.FontDescription('ubuntu 17')
+        self.thread = thread
         self._apagar = False
         self.cache = ''
         self.red_cache = ''
@@ -64,7 +69,7 @@ class Janela:
         self.n_word_cache = -1
         self.jogo_escolhido = '0'
 
-        # obtendo a interface glade
+        # obtendo a interface glade.
         self.builder.add_from_file('gwc.glade')
 
         # obtendo objetos.
@@ -174,6 +179,8 @@ class Janela:
 
         # configurando.
         self._janela.set_title('programa para aprender a digitar')
+        self._professor.modify_font(pango)
+        self._aluno.modify_font(pango)
 
     def mostrar_imagem(self, widget):
         var = not self._maos.is_visible()
@@ -334,12 +341,25 @@ class Janela:
                 self.cache = choice(jogo4)
                 self._definir_imagem(self.cache, 'brancas')
                 self._professor_texto.set_text(self.cache)
+            elif self.jogo_escolhido == '2':
+                self.cache = choice(jogo1)
+                self._definir_imagem(self.cache, 'brancas')
+                self.thread.__init__(3)
+                self.thread.iniciar()
         self._aluno_texto.set_text(texto)
+
+    def _jogo2(self, n):
+        for a in range(-n, 1):
+            self._poplabel.set_text(f'tempo: {abs(a)}')
+            sleep(1)
 
 
 def main():
-    app = Janela()  # noqa
-    Gtk.main()
+    jogo2 = Jogo2(3)
+    jogo2.iniciar()
+    app = Janela(jogo2)
+    jogo2.self2 = app
+    App(Gtk.main).iniciar()
 
 
 # mostrar imagem do procedimento com o shift? mostrar essa imagem no jogo?
