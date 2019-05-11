@@ -1,27 +1,11 @@
 from os import getcwd
 import gi
 from random import choice
-from time import sleep
-from pdb import set_trace
-from thread import Jogo2, App
-from gi.repository import Pango
+from .dicionario import dicionário
+gi.require_version('Pango', '1.0')
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk  # noqa
-
-d = {' ': 'espaço', '/': 'barra_direita', '\\': 'barra_esquerda',
-     'sh': 'shift_esquerdo', 'sh2': 'shift_direito', '|': ['sh2', '\\'],
-     '?': ['sh2', '/'], '[': 'colchete_esquerdo', ']': 'colchete_direito',
-     '\n': 'enter', '{': ['sh', '['], '}': ['sh', ']'], '.': 'ponto',
-     ';': 'ponto_virgula', ',': 'virgula', "'": 'aspas', '^': ['sh', '~'],
-     '>': ['sh', '.'], ':': ['sh', ';'], '<': ['sh', ','], '"': ['sh', "'"],
-     'ã': ['~', 'a'], 'õ': ['~', 'o'], 'â': ['~', 'sh', 'a'],
-     'ê': ['~', 'sh', 'e'], 'ô': ['~', 'sh', 'o'], '=': 'igual',
-     'á': ['´', 'a'], 'é': ['´', 'e'], 'í': ['´', 'i'], 'ó': ['´', 'o'],
-     'ú': ['´', 'u'], '+': ['sh', '='], 'à': ['´', 'sh', 'a'],
-     '_': ['sh', '-'], '-': 'menos', '!': ['sh', '1'], '@': ['sh2', '2'],
-     '#': ['sh2', '3'], '$': ['sh2', '4'], '%': ['sh2', '5'], '¨': ['sh', '6'],
-     '&': ['sh', '7'], '*': ['sh', '8'], '(': ['sh', '9'], ')': ['sh', '0'],
-     '´': 'agudo', '~': 'til', '`': ['sh', '´']}
+from gi.repository import Pango  # noqa
 
 right_shift = 'qwertasdfgzxcvbãáâàêé'
 left_shift = 'yuiophjklçnmíõôóú'
@@ -32,33 +16,19 @@ jogo1 = 'abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\'
 jogo4 = 'ãêáõôéâíóúà`´~^' + 'ãêáõôéâíóúà'.upper()
 
 
-def dr(item):
-    """
-    Função de recursividade que retorna um gerador do dicionário d.
-    Este gerador tem a função de retornar parte do nome da imagem à ser
-    carregada.
-    """
-    if isinstance(item, str) and item.lower() in d:
-        return dr(d.get(item.lower(), item.lower()))
-    elif isinstance(item, str):
-        return item
-    return (dr(a.lower()) for a in item)
-
-
 def colorir(texto, posicao, cor='green1'):
     """
     Função que colore um texto em uma determinada posição.
     """
-    texto = texto.split(' ')
+    texto = texto.split()
     texto[posicao] = f'<span color="{cor}">{texto[posicao]}</span>'
     return ' '.join(texto)
 
 
 class Janela:
-    def __init__(self, thread):
+    def __init__(self):
         # criando objetos.
         pango = Pango.FontDescription('ubuntu 17')
-        self.thread = thread
         self._apagar = False
         self.cache = ''
         self.red_cache = ''
@@ -183,17 +153,12 @@ class Janela:
         self._aluno.modify_font(pango)
 
     def mostrar_imagem(self, widget):
-        var = not self._maos.is_visible()
-        self._maos.set_visible(var)
+        self._maos.set_visible(not self._maos.is_visible())
 
     def aluno_digitando(self, widget):
         prof = self._professor_texto
-        texto = widget.get_text(widget.get_start_iter(), widget.get_end_iter(),
-                                False)
-        texto_professor = prof.get_text(prof.get_start_iter(),
-                                        prof.get_end_iter(), False)
-        if int(self._jogos.get_active_id()):
-            return self._jogo(texto[-1:])
+        texto = self._obter_texto()
+        texto_professor = self._obter_texto(True)
         self._normalizar_imagem()
         if texto_professor == texto:
             # apagar e talvez inserir texto do arquivo
@@ -211,22 +176,18 @@ class Janela:
             # imagem branca
             self.cache = texto_professor[len(texto):][0]
             self._definir_imagem(self.cache, 'brancas')
-        elif not texto_professor.startswith(texto):
+        if not texto_professor.startswith(texto):
             # imagem vermelha
             if all([texto, self._apagar]):
                 self._aluno.do_backspace(self._aluno)
-            else:
-                imagem = f'{self.local}/imagens/brancas/backspace.png'
-                getattr(self, '_backspace').set_from_file(imagem)
+            if texto:
+                self._definir_imagem('backspace', 'brancas')
             self.red_cache = texto[-1]
             self._definir_imagem(self.red_cache, 'vermelhas')
-        self._colorir_texto(prof, texto_professor, texto)
+        self._colorir_texto(texto_professor, texto)
 
     def professor_digitando(self, widget):
-        prof = self._professor_texto
-        texto_professor = prof.get_text(prof.get_start_iter(),
-                                        prof.get_end_iter(),
-                                        False)
+        texto_professor = self._obter_texto(True)
         if len(texto_professor) == 1 or self.texto:
             self._normalizar_imagem()
             self.cache = self.prof_cache = texto_professor[0]
@@ -252,10 +213,7 @@ class Janela:
             self.prof_cache = ''
 
     def _definir_imagem(self, a, pasta):
-        rd = dr(a)
-        if isinstance(rd, str):
-            rd = [rd]
-        for b in rd:
+        for b in dicionário.get(a.lower(), a.lower()):
             quadro = getattr(self, '_' + b.lower(), '')
             imagem = f'{self.local}/imagens/{pasta}/{b.lower()}.png'
             quadro and quadro.set_from_file(imagem)  # noqa
@@ -263,12 +221,29 @@ class Janela:
             self._dedos(a, b, quadro)
         if all([a.isupper(), a.lower() in lr]):
             if b.lower() in right_shift:
-              shift = 'direito'
+                shift = 'direito'
             elif b.lower() in left_shift:
-              shift = 'esquerdo'
+                shift = 'esquerdo'
             quadro = getattr(self, f'_shift_{shift}')
             imagem = f'{self.local}/imagens/{pasta}/shift_{shift}.png'
             quadro.set_from_file(imagem)
+
+    def _limpar_texto(self, usuario='aluno'):
+        # 'aluno', 'professor', 'ambos'
+        prof, aluno = self._professor_texto, self._aluno_texto
+        if usuario == 'aluno':
+            aluno.delete(aluno.get_start_iter(), aluno.get_end_iter())
+        elif usuario == 'professor':
+            prof.delete(prof.get_start_iter(), prof.get_end_iter())
+        elif usuario == 'ambos':
+            aluno.delete(aluno.get_start_iter(), aluno.get_end_iter())
+            prof.delete(prof.get_start_iter(), prof.get_end_iter())
+
+    def _obter_texto(self, professor=False):
+        user = self._professor_texto if professor else self._aluno_texto
+        texto = user.get_text(user.get_start_iter(),
+                              user.get_end_iter(), False)
+        return texto
 
     def _dedos(self, a, b, quadro):
         for c in dedos:
@@ -279,6 +254,7 @@ class Janela:
             self._mostrar_popup(quadro, '5')
 
     def arquivo_escolhido(self, widget):
+        self._limpar_texto('ambos')
         with open(widget.get_filename(), 'r') as f:
             self.texto = f.readlines()
         self.aluno_digitando(self._aluno_texto)
@@ -289,9 +265,7 @@ class Janela:
         # limpar o self.texto, aluno e professor, normalizar as imagens
         self._normalizar_imagem()
         self.texto = ''
-        prof, aluno = self._professor_texto, self._aluno_texto
-        prof.delete(prof.get_start_iter(), prof.get_end_iter())
-        aluno.delete(aluno.get_start_iter(), aluno.get_end_iter())
+        self._limpar_texto('ambos')
         self._popover.hide()
 
     def _mostrar_popup(self, tecla, texto):
@@ -302,25 +276,33 @@ class Janela:
 
     def jogo_alterado(self, widget):
         self.remover_arquivo(None)
+        cache = self.jogo_escolhido
         self.jogo_escolhido = widget.get_active_id()
         if self.jogo_escolhido == '0':
+            self._aluno_texto.connect('end-user-action', self.aluno_digitando)
+            if cache != '0':
+                self._aluno_texto.disconnect_by_func(self._jogo)
             self._normalizar_imagem()
             self._niveis.set_visible(False)
             self._professor.set_sensitive(True)
             self._area_arquivo.set_sensitive(True)
             self._area_opcoes.set_sensitive(True)
         else:
+            self._aluno_texto.connect('end-user-action', self._jogo)
+            if cache == '0':
+                self._aluno_texto.disconnect_by_func(self.aluno_digitando)
             self._niveis.set_visible(True)
             self._professor.set_sensitive(False)
             self._area_arquivo.set_sensitive(False)
             self._area_opcoes.set_sensitive(False)
             self._auto_apagar.set_active(False)
             self._mostrar_maos.set_active(False)
-        self.aluno_digitando(self._aluno_texto)
+            self._jogo(None)  # é preciso chamar a primeira
 
-    def _colorir_texto(self, prof, texto_p, texto):
-        condicoes = [bool(texto_p),
-                     texto.count(' ') <= texto_p.count(' '),
+    def _colorir_texto(self, texto_p, texto):
+        """ Método que colore um texto em um text_view """
+        prof = self._professor_texto
+        condicoes = [bool(texto_p), texto.count(' ') <= texto_p.count(' '),
                      texto_p.count(' ') > 0,
                      texto.count(' ') != self.n_word_cache]
         if all(condicoes):
@@ -329,37 +311,29 @@ class Janela:
                                colorir(texto_p, texto.count(' ')), -1)
             self.n_word_cache = texto.count(' ')
 
-    def _jogo(self, texto):
+    def _jogo(self, widget):
+        """
+        Método que roda os games escolhidos quando algum game é escolhido.
+        """
+        texto = self._obter_texto()[-1:]
         if texto == self.cache:
             self._normalizar_imagem()
             if self.jogo_escolhido == '1':
                 self.cache = choice(jogo1)
-                quadro = getattr(self, '_' + dr(self.cache), '')
+                temporário = dicionário.get(self.cache, [self.cache])
+                quadro = getattr(self, '_' + temporário[0], '')
                 imagem = f'{self.local}/imagens/?/pequenas.png'
                 quadro.set_from_file(imagem)
             elif self.jogo_escolhido == '4':
                 self.cache = choice(jogo4)
                 self._definir_imagem(self.cache, 'brancas')
                 self._professor_texto.set_text(self.cache)
-            elif self.jogo_escolhido == '2':
-                self.cache = choice(jogo1)
-                self._definir_imagem(self.cache, 'brancas')
-                self.thread.__init__(3)
-                self.thread.iniciar()
         self._aluno_texto.set_text(texto)
-
-    def _jogo2(self, n):
-        for a in range(-n, 1):
-            self._poplabel.set_text(f'tempo: {abs(a)}')
-            sleep(1)
 
 
 def main():
-    jogo2 = Jogo2(3)
-    jogo2.iniciar()
-    app = Janela(jogo2)
-    jogo2.self2 = app
-    App(Gtk.main).iniciar()
+    app = Janela()  # noqa
+    Gtk.main()
 
 
 # mostrar imagem do procedimento com o shift? mostrar essa imagem no jogo?

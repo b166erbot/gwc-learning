@@ -8,14 +8,13 @@ Requirements:
 =============
 
     - gi -> sudo apt-get install python3-gi
-    * To install execute: pip3 install -r requirements.txt
 
 Python version:
 ===============
 
     - 3.6.7 +
 
-Used programs:
+Programs used:
 ==============
 
     - Glade - UI xml interface.
