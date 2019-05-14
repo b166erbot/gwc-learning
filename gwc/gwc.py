@@ -6,7 +6,10 @@ gi.require_version('Pango', '1.0')
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk  # noqa
 from gi.repository import Pango  # noqa
+from pdb import set_trace
 
+
+# refatorar. mover para outro escopo?
 right_shift = 'qwertasdfgzxcvbãáâàêé'
 left_shift = 'yuiophjklçnmíõôóú'
 lr = right_shift + left_shift
@@ -15,8 +18,11 @@ dedos = ['\'"1qaz\\|', '2wsx', '3edc', '45rtfgvb', '0pç;:/?~^´`-_=+[]{}\n',
 jogo1 = 'abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\'
 jogo4 = 'ãêáõôéâíóúà`´~^' + 'ãêáõôéâíóúà'.upper()
 
+with open('palavras.txt', 'r') as f:
+    palavras = [a.split() for a in f.readlines()][0]
 
-def colorir(texto, posicao, cor='green1'):
+
+def colorir(texto, posicao, cor='green1'):  # bug do espaço antes e depois
     """
     Função que colore um texto em uma determinada posição.
     """
@@ -38,6 +44,7 @@ class Janela:
         self.texto = []
         self.n_word_cache = -1
         self.jogo_escolhido = '0'
+        self.n_jogos = {'1': self._jogo1, '3': self._jogo3, '4': self._jogo4}
 
         # obtendo a interface glade.
         self.builder.add_from_file('gwc.glade')
@@ -214,7 +221,7 @@ class Janela:
 
     def _definir_imagem(self, a, pasta):
         for b in dicionário.get(a.lower(), a.lower()):
-            quadro = getattr(self, '_' + b.lower(), '')
+            quadro = getattr(self, f'_{b.lower()}', '')
             imagem = f'{self.local}/imagens/{pasta}/{b.lower()}.png'
             quadro and quadro.set_from_file(imagem)  # noqa
         if pasta == 'brancas':
@@ -270,7 +277,7 @@ class Janela:
 
     def _mostrar_popup(self, tecla, texto):
         self._popover.hide()
-        self._poplabel.set_text('dedo: ' + texto)
+        self._poplabel.set_text(f'dedo: {texto}')
         self._popover.set_relative_to(tecla)
         self._popover.show()
 
@@ -315,20 +322,32 @@ class Janela:
         """
         Método que roda os games escolhidos quando algum game é escolhido.
         """
-        texto = self._obter_texto()[-1:]
-        if texto == self.cache:
+        texto = self._obter_texto()
+        if self.jogo_escolhido in '124':
+            if texto[-1:] == self.cache:
+                self._normalizar_imagem()
+                self.n_jogos[self.jogo_escolhido]()
+            self._aluno_texto.set_text(texto[-1:])
+        else:
             self._normalizar_imagem()
-            if self.jogo_escolhido == '1':
-                self.cache = choice(jogo1)
-                temporário = dicionário.get(self.cache, [self.cache])
-                quadro = getattr(self, '_' + temporário[0], '')
-                imagem = f'{self.local}/imagens/?/pequenas.png'
-                quadro.set_from_file(imagem)
-            elif self.jogo_escolhido == '4':
-                self.cache = choice(jogo4)
-                self._definir_imagem(self.cache, 'brancas')
-                self._professor_texto.set_text(self.cache)
-        self._aluno_texto.set_text(texto)
+            self.n_jogos[self.jogo_escolhido]()
+
+    def _jogo1(self):
+        self.cache = choice(jogo1)
+        temporário = dicionário.get(self.cache, [self.cache])
+        quadro = getattr(self, f'_{temporário[0]}', '')
+        imagem = f'{self.local}/imagens/?/pequenas.png'
+        quadro.set_from_file(imagem)
+
+    def _jogo3(self):
+        self.aluno_digitando(self._aluno_texto)
+        if not self._obter_texto(True):
+            self._professor_texto.set_text(choice(palavras))
+
+    def _jogo4(self):
+        self.cache = choice(jogo4)
+        self._definir_imagem(self.cache, 'brancas')
+        self._professor_texto.set_text(self.cache)
 
 
 def main():
