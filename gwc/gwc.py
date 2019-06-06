@@ -22,11 +22,11 @@ with open('palavras.txt', 'r') as f:
     palavras = [a.split() for a in f.readlines()][0]
 
 
-def colorir(texto, posicao, cor='green1'):  # bug do espaço antes e depois
+def colorir(texto, posicao, cor='green1'):
     """
     Função que colore um texto em uma determinada posição.
     """
-    texto = texto.split()
+    texto = texto.split(' ')  # não remova o espaço
     texto[posicao] = f'<span color="{cor}">{texto[posicao]}</span>'
     return ' '.join(texto)
 
@@ -142,6 +142,8 @@ class Janela:
         self._niveis = self.builder.get_object('niveis')
         self._area_arquivo = self.builder.get_object('area_arquivo')
         self._area_opcoes = self.builder.get_object('area_opcoes')
+        self._níveis = self.builder.get_object('níveis')
+        self._printar_palavra = self.builder.get_object('printar_palavra')
 
         # conectando objetos.
         self._janela.connect('destroy', Gtk.main_quit)
@@ -153,6 +155,8 @@ class Janela:
         self._arquivo.connect('file-set', self.arquivo_escolhido)
         self._limpar_arquivo.connect('clicked', self.remover_arquivo)
         self._jogos.connect('changed', self.jogo_alterado)
+        self._níveis.connect('changed', self._nivel_alterado)
+        self._printar_palavra.connect('clicked', self._printar_clicado)
 
         # configurando.
         self._janela.set_title('programa para aprender a digitar')
@@ -171,19 +175,19 @@ class Janela:
             # apagar e talvez inserir texto do arquivo
             if not self.texto:
                 self.remover_arquivo(None)
+                texto_professor = ''
             else:
                 prof.set_text(self.texto[0])
                 self.professor_digitando(self._professor_texto)
-                texto_professor = self.texto[0]
+                texto_professor = self.texto.pop(0)
                 texto = ''
-                self.texto.pop(0)
                 self.n_word_cache = -1
             widget.set_text('')
         elif texto_professor.startswith(texto) and texto_professor != texto:
             # imagem branca
             self.cache = texto_professor[len(texto):][0]
             self._definir_imagem(self.cache, 'brancas')
-        if not texto_professor.startswith(texto):
+        elif not texto_professor.startswith(texto):  # porque if ao invés elif?
             # imagem vermelha
             if all([texto, self._apagar]):
                 self._aluno.do_backspace(self._aluno)
@@ -219,10 +223,10 @@ class Janela:
             self._definir_imagem(self.prof_cache, 'normais')
             self.prof_cache = ''
 
-    def _definir_imagem(self, a, pasta):
+    def _definir_imagem(self, a, pasta, c=''):
         for b in dicionário.get(a.lower(), a.lower()):
             quadro = getattr(self, f'_{b.lower()}', '')
-            imagem = f'{self.local}/imagens/{pasta}/{b.lower()}.png'
+            imagem = f'{self.local}/imagens/{pasta}/{c or b.lower()}.png'
             quadro and quadro.set_from_file(imagem)  # noqa
         if pasta == 'brancas':
             self._dedos(a, b, quadro)
@@ -243,8 +247,8 @@ class Janela:
         elif usuario == 'professor':
             prof.delete(prof.get_start_iter(), prof.get_end_iter())
         elif usuario == 'ambos':
-            aluno.delete(aluno.get_start_iter(), aluno.get_end_iter())
             prof.delete(prof.get_start_iter(), prof.get_end_iter())
+            aluno.delete(aluno.get_start_iter(), aluno.get_end_iter())
 
     def _obter_texto(self, professor=False):
         user = self._professor_texto if professor else self._aluno_texto
@@ -294,6 +298,8 @@ class Janela:
             self._professor.set_sensitive(True)
             self._area_arquivo.set_sensitive(True)
             self._area_opcoes.set_sensitive(True)
+            for a in jogo1:
+                self._definir_imagem(a, 'normais')
         else:
             self._aluno_texto.connect('end-user-action', self._jogo)
             if cache == '0':
@@ -304,7 +310,10 @@ class Janela:
             self._area_opcoes.set_sensitive(False)
             self._auto_apagar.set_active(False)
             self._mostrar_maos.set_active(False)
-            self._jogo(None)  # é preciso chamar a primeira
+            self._jogo(None)  # é preciso chamar a primeira vez
+
+    def _printar_clicado(self, widget):
+        print(self._obter_texto(True))
 
     def _colorir_texto(self, texto_p, texto):
         """ Método que colore um texto em um text_view """
@@ -323,31 +332,48 @@ class Janela:
         Método que roda os games escolhidos quando algum game é escolhido.
         """
         texto = self._obter_texto()
-        if self.jogo_escolhido in '124':
-            if texto[-1:] == self.cache:
+        if self.jogo_escolhido in '14':
+            if self.jogo_escolhido != '1':
                 self._normalizar_imagem()
+            if texto[-1:] == self.cache:
                 self.n_jogos[self.jogo_escolhido]()
             self._aluno_texto.set_text(texto[-1:])
         else:
-            self._normalizar_imagem()
+            # self._normalizar_imagem()
             self.n_jogos[self.jogo_escolhido]()
+        # normalizar não deveria estar neste método?
 
     def _jogo1(self):
+        if self._níveis.get_active_id() != '0':
+            self._definir_imagem(self.cache, '?', 'pequenas_red')
+        else:
+            self._normalizar_imagem()
         self.cache = choice(jogo1)
-        temporário = dicionário.get(self.cache, [self.cache])
-        quadro = getattr(self, f'_{temporário[0]}', '')
-        imagem = f'{self.local}/imagens/?/pequenas.png'
-        quadro.set_from_file(imagem)
+        self._definir_imagem(self.cache, '?', 'pequenas')
 
     def _jogo3(self):
         self.aluno_digitando(self._aluno_texto)
         if not self._obter_texto(True):
             self._professor_texto.set_text(choice(palavras))
+        self.aluno_digitando(self._aluno_texto)
 
     def _jogo4(self):
         self.cache = choice(jogo4)
         self._definir_imagem(self.cache, 'brancas')
         self._professor_texto.set_text(self.cache)
+
+    def _nivel_alterado(self, widget):
+        if self.jogo_escolhido + widget.get_active_id() == '12':
+            temp = self.cache  # pra que o temp aqui?
+            for a in jogo1:
+                self._definir_imagem(a, '?', 'pequenas_red')
+            self._definir_imagem(self.cache, '?', 'pequenas')
+        else:
+            if self.jogo_escolhido == '1':
+                temp = self.cache
+                for a in jogo1:
+                    self._definir_imagem(a, 'normais')
+                self._definir_imagem(temp, '?', 'pequenas')
 
 
 def main():
