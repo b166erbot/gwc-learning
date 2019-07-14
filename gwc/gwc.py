@@ -1,12 +1,11 @@
-from os import getcwd
 import gi
 from random import choice
 from .dicionario import dicionário
+import re
 gi.require_version('Pango', '1.0')
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk  # noqa
 from gi.repository import Pango  # noqa
-from pdb import set_trace
 
 
 # refatorar. mover para outro escopo?
@@ -26,9 +25,10 @@ def colorir(texto, posicao, cor='green1'):
     """
     Função que colore um texto em uma determinada posição.
     """
-    texto = texto.split(' ')  # não remova o espaço
+    texto = list(map(''.join, re.findall(r'(\s*)(\S*)(\s*)', texto)))
+    # texto = texto.split(' ')  # não remova o espaço
     texto[posicao] = f'<span color="{cor}">{texto[posicao]}</span>'
-    return ' '.join(texto)
+    return ''.join(texto)
 
 
 class Janela:
@@ -40,93 +40,16 @@ class Janela:
         self.red_cache = ''
         self.prof_cache = ''
         self.builder = Gtk.Builder()
-        self.local = getcwd()
         self.texto = []
         self.n_word_cache = -1
         self.jogo_escolhido = '0'
-        self.n_jogos = {'1': self._jogo1, '3': self._jogo3, '4': self._jogo4}
+        self.n_jogos = {'1': self._jogo1, '2': self._jogo2, '3': self._jogo3}
 
         # obtendo a interface glade.
         self.builder.add_from_file('gwc.glade')
 
         # obtendo objetos.
         self._janela = self.builder.get_object('janela')
-        self._0 = self.builder.get_object('zero')
-        self._1 = self.builder.get_object('um')
-        self._2 = self.builder.get_object('dois')
-        self._3 = self.builder.get_object('tres')
-        self._4 = self.builder.get_object('quatro')
-        self._5 = self.builder.get_object('cinco')
-        self._6 = self.builder.get_object('seis')
-        self._7 = self.builder.get_object('sete')
-        self._8 = self.builder.get_object('oito')
-        self._9 = self.builder.get_object('nove')
-        self._agudo = self.builder.get_object('agudo')
-        self._alt_direito = self.builder.get_object('alt-direito')
-        self._alt_esquerdo = self.builder.get_object('alt-esquerdo')
-        self._a = self.builder.get_object('a')
-        self._aspas = self.builder.get_object('aspas')
-        self._backspace = self.builder.get_object('backspace')
-        self._barra_direita = self.builder.get_object('barra-direita')
-        self._barra_esquerda = self.builder.get_object('barra-esquerda')
-        self._b = self.builder.get_object('b')
-        self._capslock = self.builder.get_object('capslock')
-        self._colchete_direito = self.builder.get_object('colchete-direito')
-        self._colchete_esquerdo = self.builder.get_object('colchete-esquerdo')
-        self._control_direito = self.builder.get_object('control-direito')
-        self._control_esquerdo = self.builder.get_object('control-esquerdo')
-        self._c = self.builder.get_object('c')
-        self._ç = self.builder.get_object('ç')
-        self._d = self.builder.get_object('d')
-        self._enter = self.builder.get_object('enter')
-        self._e = self.builder.get_object('e')
-        self._esc = self.builder.get_object('esc')
-        self._espaço = self.builder.get_object('espaço')
-        self._f10 = self.builder.get_object('f10')
-        self._f11 = self.builder.get_object('f11')
-        self._f12 = self.builder.get_object('f12')
-        self._f1 = self.builder.get_object('f1')
-        self._f2 = self.builder.get_object('f2')
-        self._f3 = self.builder.get_object('f3')
-        self._f4 = self.builder.get_object('f4')
-        self._f5 = self.builder.get_object('f5')
-        self._f6 = self.builder.get_object('f6')
-        self._f7 = self.builder.get_object('f7')
-        self._f8 = self.builder.get_object('f8')
-        self._f9 = self.builder.get_object('f9')
-        self._f = self.builder.get_object('f')
-        self._g = self.builder.get_object('g')
-        self._h = self.builder.get_object('h')
-        self._igual = self.builder.get_object('igual')
-        self._i = self.builder.get_object('i')
-        self._j = self.builder.get_object('j')
-        self._k = self.builder.get_object('k')
-        self._l = self.builder.get_object('l')
-        self._menos = self.builder.get_object('menos')
-        self._menu = self.builder.get_object('menu')
-        self._m = self.builder.get_object('m')
-        self._n = self.builder.get_object('n')
-        self._o = self.builder.get_object('o')
-        self._ponto = self.builder.get_object('ponto')
-        self._ponto_virgula = self.builder.get_object('ponto-virgula')
-        self._p = self.builder.get_object('p')
-        self._q = self.builder.get_object('q')
-        self._r = self.builder.get_object('r')
-        self._shift_direito = self.builder.get_object('shift-direito')
-        self._shift_esquerdo = self.builder.get_object('shift-esquerdo')
-        self._s = self.builder.get_object('s')
-        self._tab = self.builder.get_object('tab')
-        self._til = self.builder.get_object('til')
-        self._t = self.builder.get_object('t')
-        self._u = self.builder.get_object('u')
-        self._virgula = self.builder.get_object('virgula')
-        self._v = self.builder.get_object('v')
-        self._windows_direito = self.builder.get_object('windows-direito')
-        self._windows_esquerdo = self.builder.get_object('windows-esquerdo')
-        self._w = self.builder.get_object('w')
-        self._x = self.builder.get_object('x')
-        self._y = self.builder.get_object('y')
-        self._z = self.builder.get_object('z')
         self._mostrar_maos = self.builder.get_object('mostrar_maos')
         self._maos = self.builder.get_object('maos')
         self._auto_apagar = self.builder.get_object('auto_apagar')
@@ -142,8 +65,87 @@ class Janela:
         self._niveis = self.builder.get_object('niveis')
         self._area_arquivo = self.builder.get_object('area_arquivo')
         self._area_opcoes = self.builder.get_object('area_opcoes')
-        self._níveis = self.builder.get_object('níveis')
+        self._niveis_botao = self.builder.get_object('níveis')
         self._printar_palavra = self.builder.get_object('printar_palavra')
+
+        self.imagens = {
+            '0': self.builder.get_object('zero'),
+            '1': self.builder.get_object('um'),
+            '2': self.builder.get_object('dois'),
+            '3': self.builder.get_object('tres'),
+            '4': self.builder.get_object('quatro'),
+            '5': self.builder.get_object('cinco'),
+            '6': self.builder.get_object('seis'),
+            '7': self.builder.get_object('sete'),
+            '8': self.builder.get_object('oito'),
+            '9': self.builder.get_object('nove'),
+            'agudo': self.builder.get_object('agudo'),
+            'alt_direito': self.builder.get_object('alt-direito'),
+            'alt_esquerdo': self.builder.get_object('alt-esquerdo'),
+            'a': self.builder.get_object('a'),
+            'aspas': self.builder.get_object('aspas'),
+            'backspace': self.builder.get_object('backspace'),
+            'barra_direita': self.builder.get_object('barra-direita'),
+            'barra_esquerda': self.builder.get_object('barra-esquerda'),
+            'b': self.builder.get_object('b'),
+            'capslock': self.builder.get_object('capslock'),
+            'colchete_direito': self.builder.get_object('colchete-direito'),
+            'colchete_esquerdo': self.builder.get_object('colchete-esquerdo'),
+            'control_direito': self.builder.get_object('control-direito'),
+            'control_esquerdo': self.builder.get_object('control-esquerdo'),
+            'c': self.builder.get_object('c'),
+            'ç': self.builder.get_object('ç'),
+            'd': self.builder.get_object('d'),
+            'enter': self.builder.get_object('enter'),
+            'e': self.builder.get_object('e'),
+            'esc': self.builder.get_object('esc'),
+            'espaço': self.builder.get_object('espaço'),
+            'f10': self.builder.get_object('f10'),
+            'f11': self.builder.get_object('f11'),
+            'f12': self.builder.get_object('f12'),
+            'f1': self.builder.get_object('f1'),
+            'f2': self.builder.get_object('f2'),
+            'f3': self.builder.get_object('f3'),
+            'f4': self.builder.get_object('f4'),
+            'f5': self.builder.get_object('f5'),
+            'f6': self.builder.get_object('f6'),
+            'f7': self.builder.get_object('f7'),
+            'f8': self.builder.get_object('f8'),
+            'f9': self.builder.get_object('f9'),
+            'f': self.builder.get_object('f'),
+            'g': self.builder.get_object('g'),
+            'h': self.builder.get_object('h'),
+            'igual': self.builder.get_object('igual'),
+            'i': self.builder.get_object('i'),
+            'j': self.builder.get_object('j'),
+            'k': self.builder.get_object('k'),
+            'l': self.builder.get_object('l'),
+            'menos': self.builder.get_object('menos'),
+            'menu': self.builder.get_object('menu'),
+            'm': self.builder.get_object('m'),
+            'n': self.builder.get_object('n'),
+            'o': self.builder.get_object('o'),
+            'ponto': self.builder.get_object('ponto'),
+            'ponto_virgula': self.builder.get_object('ponto-virgula'),
+            'p': self.builder.get_object('p'),
+            'q': self.builder.get_object('q'),
+            'r': self.builder.get_object('r'),
+            'shift_direito': self.builder.get_object('shift-direito'),
+            'shift_esquerdo': self.builder.get_object('shift-esquerdo'),
+            's': self.builder.get_object('s'),
+            'tab': self.builder.get_object('tab'),
+            'til': self.builder.get_object('til'),
+            't': self.builder.get_object('t'),
+            'u': self.builder.get_object('u'),
+            'virgula': self.builder.get_object('virgula'),
+            'v': self.builder.get_object('v'),
+            'windows_direito': self.builder.get_object('windows-direito'),
+            'windows_esquerdo': self.builder.get_object('windows-esquerdo'),
+            'w': self.builder.get_object('w'),
+            'x': self.builder.get_object('x'),
+            'y': self.builder.get_object('y'),
+            'z': self.builder.get_object('z')
+        }
 
         # conectando objetos.
         self._janela.connect('destroy', Gtk.main_quit)
@@ -155,8 +157,9 @@ class Janela:
         self._arquivo.connect('file-set', self.arquivo_escolhido)
         self._limpar_arquivo.connect('clicked', self.remover_arquivo)
         self._jogos.connect('changed', self.jogo_alterado)
-        self._níveis.connect('changed', self._nivel_alterado)
-        self._printar_palavra.connect('clicked', self._printar_clicado)
+        self._niveis_botao.connect('changed', self._nivel_alterado)
+        self._printar_palavra.connect('clicked',
+                                      lambda *x: print(self._obter_texto(True)))
 
         # configurando.
         self._janela.set_title('programa para aprender a digitar')
@@ -171,23 +174,28 @@ class Janela:
         texto = self._obter_texto()
         texto_professor = self._obter_texto(True)
         self._normalizar_imagem()
+        self._textos_iguais(texto, texto_professor, prof, widget)
+        self._imagens(prof, widget)
+
+    def _textos_iguais(self, texto, texto_professor, prof, aluno):
         if texto_professor == texto:
-            # apagar e talvez inserir texto do arquivo
-            if not self.texto:
-                self.remover_arquivo(None)
-                texto_professor = ''
-            else:
+            if self.texto:
                 prof.set_text(self.texto[0])
                 self.professor_digitando(self._professor_texto)
                 texto_professor = self.texto.pop(0)
-                texto = ''
                 self.n_word_cache = -1
-            widget.set_text('')
-        elif texto_professor.startswith(texto) and texto_professor != texto:
+            else:
+                self.remover_arquivo(None)
+                prof.set_text('')
+            aluno.set_text('')
+
+    def _imagens(self, prof, aluno):
+        texto, texto_professor = self._obter_texto(), self._obter_texto(True)
+        if texto_professor.startswith(texto) and texto_professor != texto:
             # imagem branca
             self.cache = texto_professor[len(texto):][0]
             self._definir_imagem(self.cache, 'brancas')
-        elif not texto_professor.startswith(texto):  # porque if ao invés elif?
+        elif not texto_professor.startswith(texto):
             # imagem vermelha
             if all([texto, self._apagar]):
                 self._aluno.do_backspace(self._aluno)
@@ -223,20 +231,21 @@ class Janela:
             self._definir_imagem(self.prof_cache, 'normais')
             self.prof_cache = ''
 
-    def _definir_imagem(self, a, pasta, c=''):
-        for b in dicionário.get(a.lower(), a.lower()):
-            quadro = getattr(self, f'_{b.lower()}', '')
-            imagem = f'{self.local}/imagens/{pasta}/{c or b.lower()}.png'
-            quadro and quadro.set_from_file(imagem)  # noqa
+    # a = letra, c = segundo nome da imagem, caso eu queira outra.
+    def _definir_imagem(self, letra, pasta, nomeNaoDicionario=''):
+        for imagem in dicionário.get(letra.lower(), letra.lower()):
+            quadro = self.imagens.get(imagem)
+            local_imagem = f'imagens/{pasta}/{nomeNaoDicionario or imagem}.png'
+            quadro.set_from_file(local_imagem)
         if pasta == 'brancas':
-            self._dedos(a, b, quadro)
-        if all([a.isupper(), a.lower() in lr]):
-            if b.lower() in right_shift:
+            self._dedos(letra, imagem, quadro)
+        if all([letra.isupper(), letra.lower() in lr]):
+            if imagem.lower() in right_shift:
                 shift = 'direito'
-            elif b.lower() in left_shift:
+            elif imagem.lower() in left_shift:
                 shift = 'esquerdo'
-            quadro = getattr(self, f'_shift_{shift}')
-            imagem = f'{self.local}/imagens/{pasta}/shift_{shift}.png'
+            quadro = self.imagens.get(f'shift_{shift}')
+            imagem = f'imagens/{pasta}/shift_{shift}.png'
             quadro.set_from_file(imagem)
 
     def _limpar_texto(self, usuario='aluno'):
@@ -289,6 +298,9 @@ class Janela:
         self.remover_arquivo(None)
         cache = self.jogo_escolhido
         self.jogo_escolhido = widget.get_active_id()
+        self._niveis_botao.set_active_id('0')
+        for a in jogo1:
+            self._definir_imagem(a, 'normais')
         if self.jogo_escolhido == '0':
             self._aluno_texto.connect('end-user-action', self.aluno_digitando)
             if cache != '0':
@@ -298,8 +310,7 @@ class Janela:
             self._professor.set_sensitive(True)
             self._area_arquivo.set_sensitive(True)
             self._area_opcoes.set_sensitive(True)
-            for a in jogo1:
-                self._definir_imagem(a, 'normais')
+            self._printar_palavra.set_visible(False)
         else:
             self._aluno_texto.connect('end-user-action', self._jogo)
             if cache == '0':
@@ -310,10 +321,8 @@ class Janela:
             self._area_opcoes.set_sensitive(False)
             self._auto_apagar.set_active(False)
             self._mostrar_maos.set_active(False)
+            self._printar_palavra.set_visible(True)
             self._jogo(None)  # é preciso chamar a primeira vez
-
-    def _printar_clicado(self, widget):
-        print(self._obter_texto(True))
 
     def _colorir_texto(self, texto_p, texto):
         """ Método que colore um texto em um text_view """
@@ -323,48 +332,48 @@ class Janela:
                      texto.count(' ') != self.n_word_cache]
         if all(condicoes):
             prof.set_text('')
+            generator = map(''.join, re.findall(r'(\s*)(\S*)(\s*)', texto))
+            numero = len(list(generator))
             prof.insert_markup(prof.get_end_iter(),
-                               colorir(texto_p, texto.count(' ')), -1)
-            self.n_word_cache = texto.count(' ')
+                               colorir(texto_p, numero - 2), -1)
+            self.n_word_cache = numero
+            # numero <- texto.count(' ')
 
     def _jogo(self, widget):
         """
         Método que roda os games escolhidos quando algum game é escolhido.
         """
-        texto = self._obter_texto()
-        if self.jogo_escolhido in '14':
-            if self.jogo_escolhido != '1':
-                self._normalizar_imagem()
-            if texto[-1:] == self.cache:
-                self.n_jogos[self.jogo_escolhido]()
-            self._aluno_texto.set_text(texto[-1:])
-        else:
-            # self._normalizar_imagem()
-            self.n_jogos[self.jogo_escolhido]()
-        # normalizar não deveria estar neste método?
+        self.n_jogos[self.jogo_escolhido]()
 
     def _jogo1(self):
-        if self._níveis.get_active_id() != '0':
-            self._definir_imagem(self.cache, '?', 'pequenas_red')
-        else:
-            self._normalizar_imagem()
-        self.cache = choice(jogo1)
-        self._definir_imagem(self.cache, '?', 'pequenas')
+        letra = self._obter_texto()[-1:]  # não remova os pontos
+        self._aluno_texto.set_text(letra)
+        if letra == self.cache:
+            if self._niveis_botao.get_active_id() != '0':
+                self._definir_imagem(self.cache, '?', 'pequenas_red')
+            else:
+                self._normalizar_imagem()
+            self.cache = choice(jogo1)
+            self._definir_imagem(self.cache, '?', 'pequenas')
 
-    def _jogo3(self):
+    def _jogo2(self):
         self.aluno_digitando(self._aluno_texto)
         if not self._obter_texto(True):
             self._professor_texto.set_text(choice(palavras))
         self.aluno_digitando(self._aluno_texto)
 
-    def _jogo4(self):
-        self.cache = choice(jogo4)
-        self._definir_imagem(self.cache, 'brancas')
-        self._professor_texto.set_text(self.cache)
+    def _jogo3(self):
+        letra = self._obter_texto()[-1:]  # não remova os pontos
+        self._aluno_texto.set_text(letra)
+        if letra == self.cache:
+            self._normalizar_imagem()
+            self.cache = choice(jogo4)
+            self._definir_imagem(self.cache, 'brancas')
+            self._professor_texto.set_text(self.cache)
 
     def _nivel_alterado(self, widget):
-        if self.jogo_escolhido + widget.get_active_id() == '12':
-            temp = self.cache  # pra que o temp aqui?
+        jogo_id = self.jogo_escolhido + widget.get_active_id()
+        if jogo_id == '12':
             for a in jogo1:
                 self._definir_imagem(a, '?', 'pequenas_red')
             self._definir_imagem(self.cache, '?', 'pequenas')
@@ -377,13 +386,5 @@ class Janela:
 
 
 def main():
-    app = Janela()  # noqa
+    app = Janela()
     Gtk.main()
-
-
-# mostrar imagem do procedimento com o shift? mostrar essa imagem no jogo?
-
-# jogos:
-# aperte a tecla antes que ela desapareça
-# adivinhe a tecla
-# tempo para digitar palavras com tread

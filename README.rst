@@ -2,8 +2,6 @@
 Gnome Writer Corretly - Learning
 ================================
 
-:Author: `Bernardo Freitas <http://github.com/bernardofreitas>`_
-
 Requirements:
 =============
 
@@ -23,7 +21,7 @@ Programs used:
 Contributors:
 =============
 
-    - `Bernardo Freitas <http://github.com/bernardofreitas>`_
+    - `b166erobot <http://github.com/b166erobot>`_
 
 Source image:
 =============

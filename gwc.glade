@@ -1199,6 +1199,7 @@ inverter um a &gt; A,    A &gt; a,   tab &gt; tab do avesso,    \ &gt; |,    ; &
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="halign">center</property>
             <property name="orientation">vertical</property>
             <property name="spacing">20</property>
             <child>
@@ -1337,9 +1338,8 @@ arquivo</property>
                     <items>
                       <item id="0" translatable="yes">Nenhum</item>
                       <item id="1" translatable="yes">Adivinhe a tecla</item>
-                      <item id="2" translatable="yes">Acerte a tecla</item>
-                      <item id="3" translatable="yes">Digite palavras</item>
-                      <item id="4" translatable="yes">Treinar acentos</item>
+                      <item id="2" translatable="yes">Digite palavras</item>
+                      <item id="3" translatable="yes">Treinar acentos</item>
                     </items>
                   </object>
                   <packing>
@@ -1405,8 +1405,7 @@ arquivo</property>
                   <object class="GtkButton" id="printar_palavra">
                     <property name="label" translatable="yes">palavra errada?
 pressione aqui</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can_focus">False</property>
                     <property name="receives_default">True</property>
                   </object>
                   <packing>
