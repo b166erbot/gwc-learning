@@ -1,12 +1,15 @@
-import gi
 from random import choice
-from .dicionario import dicionário
 import re
+from json import load
+import gi
 gi.require_version('Pango', '1.0')
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk  # noqa
 from gi.repository import Pango  # noqa
 
+
+with open('gwc/teclas.json') as arquivo:
+    dicionário = load(arquivo)
 
 # refatorar. mover para outro escopo?
 right_shift = 'qwertasdfgzxcvbãáâàêé'
@@ -68,84 +71,12 @@ class Janela:
         self._niveis_botao = self.builder.get_object('níveis')
         self._printar_palavra = self.builder.get_object('printar_palavra')
 
-        self.imagens = {
-            '0': self.builder.get_object('zero'),
-            '1': self.builder.get_object('um'),
-            '2': self.builder.get_object('dois'),
-            '3': self.builder.get_object('tres'),
-            '4': self.builder.get_object('quatro'),
-            '5': self.builder.get_object('cinco'),
-            '6': self.builder.get_object('seis'),
-            '7': self.builder.get_object('sete'),
-            '8': self.builder.get_object('oito'),
-            '9': self.builder.get_object('nove'),
-            'agudo': self.builder.get_object('agudo'),
-            'alt_direito': self.builder.get_object('alt-direito'),
-            'alt_esquerdo': self.builder.get_object('alt-esquerdo'),
-            'a': self.builder.get_object('a'),
-            'aspas': self.builder.get_object('aspas'),
-            'backspace': self.builder.get_object('backspace'),
-            'barra_direita': self.builder.get_object('barra-direita'),
-            'barra_esquerda': self.builder.get_object('barra-esquerda'),
-            'b': self.builder.get_object('b'),
-            'capslock': self.builder.get_object('capslock'),
-            'colchete_direito': self.builder.get_object('colchete-direito'),
-            'colchete_esquerdo': self.builder.get_object('colchete-esquerdo'),
-            'control_direito': self.builder.get_object('control-direito'),
-            'control_esquerdo': self.builder.get_object('control-esquerdo'),
-            'c': self.builder.get_object('c'),
-            'ç': self.builder.get_object('ç'),
-            'd': self.builder.get_object('d'),
-            'enter': self.builder.get_object('enter'),
-            'e': self.builder.get_object('e'),
-            'esc': self.builder.get_object('esc'),
-            'espaço': self.builder.get_object('espaço'),
-            'f10': self.builder.get_object('f10'),
-            'f11': self.builder.get_object('f11'),
-            'f12': self.builder.get_object('f12'),
-            'f1': self.builder.get_object('f1'),
-            'f2': self.builder.get_object('f2'),
-            'f3': self.builder.get_object('f3'),
-            'f4': self.builder.get_object('f4'),
-            'f5': self.builder.get_object('f5'),
-            'f6': self.builder.get_object('f6'),
-            'f7': self.builder.get_object('f7'),
-            'f8': self.builder.get_object('f8'),
-            'f9': self.builder.get_object('f9'),
-            'f': self.builder.get_object('f'),
-            'g': self.builder.get_object('g'),
-            'h': self.builder.get_object('h'),
-            'igual': self.builder.get_object('igual'),
-            'i': self.builder.get_object('i'),
-            'j': self.builder.get_object('j'),
-            'k': self.builder.get_object('k'),
-            'l': self.builder.get_object('l'),
-            'menos': self.builder.get_object('menos'),
-            'menu': self.builder.get_object('menu'),
-            'm': self.builder.get_object('m'),
-            'n': self.builder.get_object('n'),
-            'o': self.builder.get_object('o'),
-            'ponto': self.builder.get_object('ponto'),
-            'ponto_virgula': self.builder.get_object('ponto-virgula'),
-            'p': self.builder.get_object('p'),
-            'q': self.builder.get_object('q'),
-            'r': self.builder.get_object('r'),
-            'shift_direito': self.builder.get_object('shift-direito'),
-            'shift_esquerdo': self.builder.get_object('shift-esquerdo'),
-            's': self.builder.get_object('s'),
-            'tab': self.builder.get_object('tab'),
-            'til': self.builder.get_object('til'),
-            't': self.builder.get_object('t'),
-            'u': self.builder.get_object('u'),
-            'virgula': self.builder.get_object('virgula'),
-            'v': self.builder.get_object('v'),
-            'windows_direito': self.builder.get_object('windows-direito'),
-            'windows_esquerdo': self.builder.get_object('windows-esquerdo'),
-            'w': self.builder.get_object('w'),
-            'x': self.builder.get_object('x'),
-            'y': self.builder.get_object('y'),
-            'z': self.builder.get_object('z')
-        }
+        with open('gwc/imagens.json') as arquivo:
+            imagens = load(arquivo)
+            self.imagens = {
+                chave: self.builder.get_object(valor)
+                for chave, valor in imagens.items()
+            }
 
         # conectando objetos.
         self._janela.connect('destroy', Gtk.main_quit)
@@ -386,5 +317,5 @@ class Janela:
 
 
 def main():
-    app = Janela()
+    app = Janela()  # noqa
     Gtk.main()
