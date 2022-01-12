@@ -6,7 +6,7 @@ Requirements:
 =============
 
     - gi -> sudo apt-get install python3-gi
-    - or via pip -> pip install pygobject
+    - or install via pip -> pip install pygobject
 
 How to execute:
 ===============
