@@ -6,6 +6,7 @@ Requirements:
 =============
 
     - gi -> sudo apt-get install python3-gi
+    - ou via pip -> pip install pygobject
 
 Python version:
 ===============
