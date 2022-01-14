@@ -15,8 +15,10 @@ with open('gwc/teclas.json') as arquivo:
 right_shift = 'qwertasdfgzxcvbãáâàêé'
 left_shift = 'yuiophjklçnmíõôóú'
 lr = right_shift + left_shift
-dedos = ['\'"1qaz\\|', '2wsx', '3edc', '45rtfgvb', '0pç;:/?~^´`-_=+[]{}\n',
-         '9ol>.', '8ik<,', '67yuhjnm']
+dedos = [
+    '\'"1qaz\\|', '2wsx', '3edc', '45rtfgvb', '0pç;:/?~^´`-_=+[]{}\n',
+    '9ol>.', '8ik<,', '67yuhjnm'
+]
 jogo1 = 'abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\'
 jogo4 = 'ãêáõôéâíóúà`´~^' + 'ãêáõôéâíóúà'.upper()
 
@@ -82,15 +84,17 @@ class Janela:
         self._janela.connect('destroy', Gtk.main_quit)
         self._mostrar_maos.connect('toggled', self.mostrar_imagem)
         self._aluno_texto.connect('end-user-action', self.aluno_digitando)
-        self._professor_texto.connect('end-user-action',
-                                      self.professor_digitando)
+        self._professor_texto.connect(
+            'end-user-action', self.professor_digitando
+        )
         self._auto_apagar.connect('toggled', self.auto_apagar_clicado)
         self._arquivo.connect('file-set', self.arquivo_escolhido)
         self._limpar_arquivo.connect('clicked', self.remover_arquivo)
         self._jogos.connect('changed', self.jogo_alterado)
         self._niveis_botao.connect('changed', self._nivel_alterado)
-        self._printar_palavra.connect('clicked',
-                                      lambda *x: print(self._obter_texto(True)))
+        self._printar_palavra.connect(
+            'clicked', lambda *x: print(self._obter_texto(True))
+        )
 
         # configurando.
         self._janela.set_title('programa para aprender a digitar')
@@ -166,8 +170,11 @@ class Janela:
     def _definir_imagem(self, letra, pasta, nomeNaoDicionario=''):
         for imagem in dicionário.get(letra.lower(), letra.lower()):
             quadro = self.imagens.get(imagem)
-            local_imagem = f'imagens/{pasta}/{nomeNaoDicionario or imagem}.png'
-            quadro.set_from_file(local_imagem)
+            if bool(quadro):
+                local_imagem = (
+                    f'imagens/{pasta}/{nomeNaoDicionario or imagem}.png'
+                )
+                quadro.set_from_file(local_imagem)
         if pasta == 'brancas':
             self._dedos(letra, imagem, quadro)
         if all([letra.isupper(), letra.lower() in lr]):
@@ -192,16 +199,17 @@ class Janela:
 
     def _obter_texto(self, professor=False):
         user = self._professor_texto if professor else self._aluno_texto
-        texto = user.get_text(user.get_start_iter(),
-                              user.get_end_iter(), False)
+        texto = user.get_text(
+            user.get_start_iter(), user.get_end_iter(), False
+        )
         return texto
 
-    def _dedos(self, a, b, quadro):
-        for c in dedos:
-            if b.lower() in c or a.lower() in c:
-                texto = str(dedos.index(c) % 4 + 1)
+    def _dedos(self, letra, imagem, quadro):
+        for conjunto in dedos:
+            if imagem.lower() in conjunto or letra.lower() in conjunto:
+                texto = str(dedos.index(conjunto) % 4 + 1)
                 self._mostrar_popup(quadro, texto)
-        if a == ' ':
+        if letra == ' ':
             self._mostrar_popup(quadro, '5')
 
     def arquivo_escolhido(self, widget):
@@ -213,7 +221,7 @@ class Janela:
     def remover_arquivo(self, widget):
         if self._arquivo.get_filename():
             self._arquivo.unselect_file(self._arquivo.get_file())
-        # limpar o self.texto, aluno e professor, normalizar as imagens
+        # limpar o self.texto, aluno, professor e normalizar as imagens
         self._normalizar_imagem()
         self.texto = ''
         self._limpar_texto('ambos')
@@ -258,15 +266,19 @@ class Janela:
     def _colorir_texto(self, texto_p, texto):
         """ Método que colore um texto em um text_view """
         prof = self._professor_texto
-        condicoes = [bool(texto_p), texto.count(' ') <= texto_p.count(' '),
-                     texto_p.count(' ') > 0,
-                     texto.count(' ') != self.n_word_cache]
+        condicoes = [
+            bool(texto_p), texto.count(' ') <= texto_p.count(' '),
+            texto_p.count(' ') > 0,
+            texto.count(' ') != self.n_word_cache
+        ]
         if all(condicoes):
             prof.set_text('')
             generator = map(''.join, re.findall(r'(\s*)(\S*)(\s*)', texto))
             numero = len(list(generator))
-            prof.insert_markup(prof.get_end_iter(),
-                               colorir(texto_p, numero - 2), -1)
+            prof.insert_markup(
+                prof.get_end_iter(),
+                colorir(texto_p, numero - 2), -1
+            )
             self.n_word_cache = numero
             # numero <- texto.count(' ')
 
