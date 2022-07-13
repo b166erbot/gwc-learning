@@ -322,10 +322,9 @@ class Janela:
             self._definir_imagem(self.cache, '?', 'pequenas')
         else:
             if self.jogo_escolhido == '1':
-                temp = self.cache
                 for a in jogo1:
                     self._definir_imagem(a, 'normais')
-                self._definir_imagem(temp, '?', 'pequenas')
+                self._definir_imagem(self.cache, '?', 'pequenas')
 
 
 def main():
