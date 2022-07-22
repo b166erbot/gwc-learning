@@ -1,6 +1,7 @@
 from random import choice
 import re
 from json import load
+from pathlib import Path
 import gi
 gi.require_version('Pango', '1.0')
 gi.require_version('Gtk', '3.0')
@@ -22,8 +23,17 @@ dedos = [
 jogo1 = 'abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\'
 jogo4 = 'ãêáõôéâíóúà`´~^' + 'ãêáõôéâíóúà'.upper()
 
-with open('palavras.txt', 'r') as f:
-    palavras = [a.split() for a in f.readlines()][0]
+with open('palavras.txt', 'r') as file:
+    palavras = set([palavra.split() for palavra in file.readlines()][0])
+
+if Path('palavras_erradas.txt').exists():
+    with open('palavras_erradas.txt') as file:
+        palavras_erradas = set([palavra.split() for palavra in file.readlines()][0])
+    palavras = palavras - palavras_erradas
+else:
+    palavras_erradas = set()
+palavras = list(palavras)
+palavras_erradas = list(palavras_erradas)
 
 
 def colorir(texto, posicao, cor='green1'):
@@ -71,7 +81,7 @@ class Janela:
         self._area_arquivo = self.builder.get_object('area_arquivo')
         self._area_opcoes = self.builder.get_object('area_opcoes')
         self._niveis_botao = self.builder.get_object('níveis')
-        self._printar_palavra = self.builder.get_object('printar_palavra')
+        self._remover_palavra = self.builder.get_object('remover_palavra')
 
         with open('gwc/imagens.json') as arquivo:
             imagens = load(arquivo)
@@ -92,9 +102,7 @@ class Janela:
         self._limpar_arquivo.connect('clicked', self.remover_arquivo)
         self._jogos.connect('changed', self.jogo_alterado)
         self._niveis_botao.connect('changed', self._nivel_alterado)
-        self._printar_palavra.connect(
-            'clicked', lambda *x: print(self._obter_texto(True))
-        )
+        self._remover_palavra.connect('clicked', self._remover_palavra_funcao)
 
         # configurando.
         self._janela.set_title('programa para aprender a digitar')
@@ -249,7 +257,7 @@ class Janela:
             self._professor.set_sensitive(True)
             self._area_arquivo.set_sensitive(True)
             self._area_opcoes.set_sensitive(True)
-            self._printar_palavra.set_visible(False)
+            self._remover_palavra.set_visible(False)
         else:
             self._aluno_texto.connect('end-user-action', self._jogo)
             if cache == '0':
@@ -260,7 +268,7 @@ class Janela:
             self._area_opcoes.set_sensitive(False)
             self._auto_apagar.set_active(False)
             self._mostrar_maos.set_active(False)
-            self._printar_palavra.set_visible(True)
+            self._remover_palavra.set_visible(True)
             self._jogo(None)  # é preciso chamar a primeira vez
 
     def _colorir_texto(self, texto_p, texto):
@@ -300,6 +308,7 @@ class Janela:
             self._definir_imagem(self.cache, '?', 'pequenas')
 
     def _jogo2(self):
+        # é obrigatório chamar o self.aluno_digitando antes do if senão gera um bug
         self.aluno_digitando(self._aluno_texto)
         if not self._obter_texto(True):
             self._professor_texto.set_text(choice(palavras))
@@ -325,6 +334,19 @@ class Janela:
                 for a in jogo1:
                     self._definir_imagem(a, 'normais')
                 self._definir_imagem(self.cache, '?', 'pequenas')
+    
+    def _remover_palavra_funcao(self, widget):
+        palavra = self._obter_texto(True)
+        if palavra not in palavras_erradas:
+            palavras_erradas.append(palavra)
+            with open('palavras_erradas.txt', 'a') as file:
+                file.write(palavra + '\n')
+        # é obrigatório chamar o self.aluno_digitando antes do professor_texto
+        # senão gera um bug
+        self.aluno_digitando(self._aluno_texto)
+        self._professor_texto.set_text(choice(palavras))
+        self.aluno_digitando(self._aluno_texto)
+
 
 
 def main():
