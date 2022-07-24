@@ -148,7 +148,7 @@ class Janela:
             # imagem vermelha
             if all([texto, self._apagar]):
                 self._aluno.do_backspace(self._aluno)
-            if texto:
+            elif texto:
                 self._definir_imagem('backspace', 'brancas')
             self.red_cache = texto[-1]
             self._definir_imagem(self.red_cache, 'vermelhas')
