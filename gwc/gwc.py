@@ -24,12 +24,12 @@ jogo1 = 'abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\'
 jogo4 = 'ãêáõôéâíóúà`´~^' + 'ãêáõôéâíóúà'.upper()
 
 with open('palavras.txt', 'r') as file:
-    palavras = set([palavra.split() for palavra in file.readlines()][0])
+    palavras = set([palavra.strip() for palavra in file.readlines()])
 
 if Path('palavras_erradas.txt').exists():
     with open('palavras_erradas.txt') as file:
-        palavras_erradas = set([palavra.split() for palavra in file.readlines()][0])
-    palavras = palavras - palavras_erradas
+        palavras_erradas = set([palavra.strip() for palavra in file.readlines()])
+    palavras -= palavras_erradas
 else:
     palavras_erradas = set()
 palavras = list(palavras)
@@ -110,9 +110,13 @@ class Janela:
         self._aluno.modify_font(pango)
 
     def mostrar_imagem(self, widget):
+        """Método que mostra a imagem dos dedos."""
         self._maos.set_visible(not self._maos.is_visible())
 
     def aluno_digitando(self, widget):
+        """
+        Método que verifica qual caracter foi pressionado e define a próxima imagem.
+        """
         prof = self._professor_texto
         texto = self._obter_texto()
         texto_professor = self._obter_texto(True)
@@ -121,6 +125,7 @@ class Janela:
         self._imagens(prof, widget)
 
     def _textos_iguais(self, texto, texto_professor, prof, aluno):
+        """Método que verifica se o texto é igual."""
         if texto_professor == texto:
             if self.texto:
                 prof.set_text(self.texto[0])
@@ -133,6 +138,7 @@ class Janela:
             aluno.set_text('')
 
     def _imagens(self, prof, aluno):
+        """Método que define a imagem como vermelha ou branca."""
         texto, texto_professor = self._obter_texto(), self._obter_texto(True)
         if texto_professor.startswith(texto) and texto_professor != texto:
             # imagem branca
@@ -149,6 +155,7 @@ class Janela:
         self._colorir_texto(texto_professor, texto)
 
     def professor_digitando(self, widget):
+        """Método que gerencia a popup e define a próxima imagem como branca."""
         texto_professor = self._obter_texto(True)
         if len(texto_professor) == 1 or self.texto:
             self._normalizar_imagem()
@@ -160,9 +167,11 @@ class Janela:
             self._poplabel.set_text('')
 
     def auto_apagar_clicado(self, widget):
+        """Método que seta a variável _apagar para verdadeiro ou falso."""
         self._apagar = not self._apagar
 
     def _normalizar_imagem(self):
+        """Método que volta a imagem ao padrão."""
         if self.cache:
             self._definir_imagem(self.cache, 'normais')
             self.cache = ''
@@ -174,8 +183,8 @@ class Janela:
             self._definir_imagem(self.prof_cache, 'normais')
             self.prof_cache = ''
 
-    # a = letra, c = segundo nome da imagem, caso eu queira outra.
     def _definir_imagem(self, letra, pasta, nomeNaoDicionario=''):
+        """Método que define a imagem."""
         for imagem in dicionário.get(letra.lower(), letra.lower()):
             quadro = self.imagens.get(imagem)
             if bool(quadro):
@@ -195,6 +204,7 @@ class Janela:
             quadro.set_from_file(imagem)
 
     def _limpar_texto(self, usuario='aluno'):
+        """Método que limpa o texto do aluno, professor ou ambos."""
         # 'aluno', 'professor', 'ambos'
         prof, aluno = self._professor_texto, self._aluno_texto
         if usuario == 'aluno':
@@ -206,6 +216,7 @@ class Janela:
             aluno.delete(aluno.get_start_iter(), aluno.get_end_iter())
 
     def _obter_texto(self, professor=False):
+        """Método que obtem o texto do aluno ou o do professor."""
         user = self._professor_texto if professor else self._aluno_texto
         texto = user.get_text(
             user.get_start_iter(), user.get_end_iter(), False
@@ -213,6 +224,9 @@ class Janela:
         return texto
 
     def _dedos(self, letra, imagem, quadro):
+        """
+        Método que mostra a popup na imagem correta com o número do dedo correto.
+        """
         for conjunto in dedos:
             if imagem.lower() in conjunto or letra.lower() in conjunto:
                 texto = str(dedos.index(conjunto) % 4 + 1)
@@ -221,12 +235,14 @@ class Janela:
             self._mostrar_popup(quadro, '5')
 
     def arquivo_escolhido(self, widget):
+        """Método que abre o arquivo e exibe a primeira palavra."""
         self._limpar_texto('ambos')
         with open(widget.get_filename(), 'r') as f:
             self.texto = f.readlines()
         self.aluno_digitando(self._aluno_texto)
 
     def remover_arquivo(self, widget):
+        """Método que remove o arquivo."""
         if self._arquivo.get_filename():
             self._arquivo.unselect_file(self._arquivo.get_file())
         # limpar o self.texto, aluno, professor e normalizar as imagens
@@ -236,12 +252,14 @@ class Janela:
         self._popover.hide()
 
     def _mostrar_popup(self, tecla, texto):
+        """Método que mostra a popup."""
         self._popover.hide()
         self._poplabel.set_text(f'dedo: {texto}')
         self._popover.set_relative_to(tecla)
         self._popover.show()
 
     def jogo_alterado(self, widget):
+        """Método que altera o tipo de jogo."""
         self.remover_arquivo(None)
         cache = self.jogo_escolhido
         self.jogo_escolhido = widget.get_active_id()
@@ -268,11 +286,14 @@ class Janela:
             self._area_opcoes.set_sensitive(False)
             self._auto_apagar.set_active(False)
             self._mostrar_maos.set_active(False)
-            self._remover_palavra.set_visible(True)
+            if self.jogo_escolhido == '2':
+                self._remover_palavra.set_visible(True)
+            else:
+                self._remover_palavra.set_visible(False)
             self._jogo(None)  # é preciso chamar a primeira vez
 
     def _colorir_texto(self, texto_p, texto):
-        """ Método que colore um texto em um text_view """
+        """Método que colore um texto em um text_view."""
         prof = self._professor_texto
         condicoes = [
             bool(texto_p), texto.count(' ') <= texto_p.count(' '),
@@ -292,11 +313,12 @@ class Janela:
 
     def _jogo(self, widget):
         """
-        Método que roda os games escolhidos quando algum game é escolhido.
+        Método que roda os jogos escolhidos quando algum jogo é escolhido.
         """
         self.n_jogos[self.jogo_escolhido]()
 
     def _jogo1(self):
+        """Método que joga o jogo 1."""
         letra = self._obter_texto()[-1:]  # não remova os pontos
         self._aluno_texto.set_text(letra)
         if letra == self.cache:
@@ -308,6 +330,7 @@ class Janela:
             self._definir_imagem(self.cache, '?', 'pequenas')
 
     def _jogo2(self):
+        """Método que roda o jogo 2."""
         # é obrigatório chamar o self.aluno_digitando antes do if senão gera um bug
         self.aluno_digitando(self._aluno_texto)
         if not self._obter_texto(True):
@@ -315,6 +338,7 @@ class Janela:
         self.aluno_digitando(self._aluno_texto)
 
     def _jogo3(self):
+        """Método que roda o jogo 3."""
         letra = self._obter_texto()[-1:]  # não remova os pontos
         self._aluno_texto.set_text(letra)
         if letra == self.cache:
@@ -324,6 +348,7 @@ class Janela:
             self._professor_texto.set_text(self.cache)
 
     def _nivel_alterado(self, widget):
+        """Método que altera o nível dos jogos de palavras."""
         jogo_id = self.jogo_escolhido + widget.get_active_id()
         if jogo_id == '12':
             for a in jogo1:
@@ -336,6 +361,7 @@ class Janela:
                 self._definir_imagem(self.cache, '?', 'pequenas')
     
     def _remover_palavra_funcao(self, widget):
+        """Método que adiciona a palavra na lista negativa do arquivo palavras_erradas.txt."""
         palavra = self._obter_texto(True)
         if palavra not in palavras_erradas:
             palavras_erradas.append(palavra)
@@ -346,7 +372,6 @@ class Janela:
         self.aluno_digitando(self._aluno_texto)
         self._professor_texto.set_text(choice(palavras))
         self.aluno_digitando(self._aluno_texto)
-
 
 
 def main():
