@@ -55,7 +55,7 @@ class Janela:
         self.red_cache = ''
         self.prof_cache = ''
         self.builder = Gtk.Builder()
-        self.texto = []
+        self.texto_do_arquivo = []
         self.n_word_cache = -1
         self.jogo_escolhido = '0'
         self.n_jogos = {'1': self._jogo1, '2': self._jogo2, '3': self._jogo3}
@@ -127,10 +127,10 @@ class Janela:
     def _textos_iguais(self, texto, texto_professor, prof, aluno):
         """Método que verifica se o texto é igual."""
         if texto_professor == texto:
-            if self.texto:
-                prof.set_text(self.texto[0])
+            if self.texto_do_arquivo:
+                prof.set_text(self.texto_do_arquivo[0])
                 self.professor_digitando(self._professor_texto)
-                texto_professor = self.texto.pop(0)
+                texto_professor = self.texto_do_arquivo.pop(0)
                 self.n_word_cache = -1
             else:
                 self.remover_arquivo(None)
@@ -157,7 +157,7 @@ class Janela:
     def professor_digitando(self, widget):
         """Método que gerencia a popup e define a próxima imagem como branca."""
         texto_professor = self._obter_texto(True)
-        if len(texto_professor) == 1 or self.texto:
+        if len(texto_professor) == 1 or self.texto_do_arquivo:
             self._normalizar_imagem()
             self.cache = self.prof_cache = texto_professor[0]
             self._definir_imagem(self.prof_cache, 'brancas')
@@ -167,8 +167,9 @@ class Janela:
             self._poplabel.set_text('')
 
     def auto_apagar_clicado(self, widget):
-        """Método que seta a variável _apagar para verdadeiro ou falso."""
+        """Método que seta a variável _apagar para verdadeiro ou falso e apaga o texto do aluno."""
         self._apagar = not self._apagar
+        self._aluno_texto.set_text('')
 
     def _normalizar_imagem(self):
         """Método que volta a imagem ao padrão."""
@@ -238,16 +239,16 @@ class Janela:
         """Método que abre o arquivo e exibe a primeira palavra."""
         self._limpar_texto('ambos')
         with open(widget.get_filename(), 'r') as f:
-            self.texto = f.readlines()
+            self.texto_do_arquivo = f.readlines()
         self.aluno_digitando(self._aluno_texto)
 
     def remover_arquivo(self, widget):
         """Método que remove o arquivo."""
         if self._arquivo.get_filename():
             self._arquivo.unselect_file(self._arquivo.get_file())
-        # limpar o self.texto, aluno, professor e normalizar as imagens
+        # limpar o self.texto_do_arquivo, aluno, professor e normalizar as imagens
         self._normalizar_imagem()
-        self.texto = ''
+        self.texto_do_arquivo = []
         self._limpar_texto('ambos')
         self._popover.hide()
 
@@ -283,9 +284,12 @@ class Janela:
             self._niveis.set_visible(True)
             self._professor.set_sensitive(False)
             self._area_arquivo.set_sensitive(False)
-            self._area_opcoes.set_sensitive(False)
             self._auto_apagar.set_active(False)
             self._mostrar_maos.set_active(False)
+            if self.jogo_escolhido == '2':
+                self._area_opcoes.set_sensitive(True)
+            else:
+                self._area_opcoes.set_sensitive(False)
             if self.jogo_escolhido == '2':
                 self._remover_palavra.set_visible(True)
             else:
