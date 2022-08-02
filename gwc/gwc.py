@@ -170,6 +170,7 @@ class Janela:
         """Método que seta a variável _apagar para verdadeiro ou falso e apaga o texto do aluno."""
         self._apagar = not self._apagar
         self._aluno_texto.set_text('')
+        self.aluno_digitando(None)
 
     def _normalizar_imagem(self):
         """Método que volta a imagem ao padrão."""
