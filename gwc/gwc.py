@@ -136,6 +136,18 @@ class Janela:
                 self.remover_arquivo(None)
                 prof.set_text('')
             aluno.set_text('')
+        
+    def _textos_iguais_jogo_2(self, texto, texto_professor, prof, aluno):
+        """Método que verifica se o texto é igual."""
+        if texto_professor == texto:
+            if self.texto_do_arquivo:
+                prof.set_text(self.texto_do_arquivo[0])
+                self.professor_digitando(self._professor_texto)
+                texto_professor = self.texto_do_arquivo.pop(0)
+                self.n_word_cache = -1
+            else:
+                prof.set_text('')
+            aluno.set_text('')
 
     def _imagens(self, prof, aluno):
         """Método que define a imagem como vermelha ou branca."""
@@ -152,6 +164,25 @@ class Janela:
                 self._definir_imagem('backspace', 'brancas')
             self.red_cache = texto[-1]
             self._definir_imagem(self.red_cache, 'vermelhas')
+        self._colorir_texto(texto_professor, texto)
+    
+    def _imagens_jogo_2(self, prof, aluno):
+        """Método que define a imagem como branca."""
+        texto, texto_professor = self._obter_texto(), self._obter_texto(True)
+        if texto_professor.startswith(texto) and texto_professor != texto:
+            # imagem branca
+            self.cache = texto_professor[len(texto):][0]
+            botao_ativo = int(self._niveis_botao.get_active_id())
+            if botao_ativo > 0:
+                self._definir_imagem(self.cache, '?', 'pequenas')
+            else:
+                self._definir_imagem(self.cache, 'brancas')
+        elif not texto_professor.startswith(texto):
+            # fazer o do_backspace ou definir backspace como brancas
+            if all([texto, self._apagar]):
+                self._aluno.do_backspace(self._aluno)
+            elif texto:
+                self._definir_imagem('backspace', 'brancas')
         self._colorir_texto(texto_professor, texto)
 
     def professor_digitando(self, widget):
@@ -324,7 +355,7 @@ class Janela:
 
     def _jogo1(self):
         """Método que joga o jogo 1."""
-        letra = self._obter_texto()[-1:]  # não remova os pontos
+        letra = self._obter_texto()[-1:]  # não remova os pontos pois gera um bug
         self._aluno_texto.set_text(letra)
         if letra == self.cache:
             if self._niveis_botao.get_active_id() != '0':
@@ -336,11 +367,20 @@ class Janela:
 
     def _jogo2(self):
         """Método que roda o jogo 2."""
-        # é obrigatório chamar o self.aluno_digitando antes do if senão gera um bug
-        self.aluno_digitando(self._aluno_texto)
+        # é obrigatório chamar o _textos_iguais antes do if senão gera um bug
+        self._definir_imagem('backspace', 'normais')
+        botao_ativo = int(self._niveis_botao.get_active_id())
+        if botao_ativo == 0:
+            self._normalizar_imagem()
+        elif botao_ativo > 0:
+            self._definir_imagem(self.cache, '?', 'pequenas_red')
+        prof = self._professor_texto
+        texto = self._obter_texto()
+        texto_professor = self._obter_texto(True)
+        self._textos_iguais_jogo_2(texto, texto_professor, prof, self._aluno_texto)
         if not self._obter_texto(True):
             self._professor_texto.set_text(choice(palavras))
-        self.aluno_digitando(self._aluno_texto)
+        self._imagens_jogo_2(prof, self._aluno_texto)
 
     def _jogo3(self):
         """Método que roda o jogo 3."""
@@ -355,15 +395,15 @@ class Janela:
     def _nivel_alterado(self, widget):
         """Método que altera o nível dos jogos de palavras."""
         jogo_id = self.jogo_escolhido + widget.get_active_id()
-        if jogo_id == '12':
-            for a in jogo1:
-                self._definir_imagem(a, '?', 'pequenas_red')
+        if jogo_id in ('12', '22'):
+            for letra in jogo1:
+                self._definir_imagem(letra, '?', 'pequenas_red')
             self._definir_imagem(self.cache, '?', 'pequenas')
         else:
-            if self.jogo_escolhido == '1':
-                for a in jogo1:
-                    self._definir_imagem(a, 'normais')
-                self._definir_imagem(self.cache, '?', 'pequenas')
+            for letra in jogo1:
+                self._definir_imagem(letra, 'normais')
+            self._definir_imagem(self.cache, '?', 'pequenas')
+
     
     def _remover_palavra_funcao(self, widget):
         """Método que adiciona a palavra na lista negativa do arquivo palavras_erradas.txt."""
