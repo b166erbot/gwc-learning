@@ -133,11 +133,12 @@ class Janela:
         Método que verifica qual caracter foi pressionado e define a próxima imagem.
         """
         prof = self._professor_texto
-        texto = self._obter_texto()
-        texto_professor = self._obter_texto(True)
+        aluno = widget
+        texto = self._obter_texto('aluno')
+        texto_professor = self._obter_texto('professor')
         self._normalizar_imagem()
-        self._textos_iguais(texto, texto_professor, prof, widget)
-        self._imagens(prof, widget)
+        self._textos_iguais(texto, texto_professor, prof, aluno)
+        self._imagens(prof, aluno)
 
     def _textos_iguais(self, texto, texto_professor, prof, aluno):
         """Método que verifica se o texto é igual."""
@@ -166,13 +167,14 @@ class Janela:
 
     def _imagens(self, prof, aluno):
         """Método que define a imagem como vermelha ou branca."""
-        texto, texto_professor = self._obter_texto(), self._obter_texto(True)
+        texto = self._obter_texto('aluno')
+        texto_professor = self._obter_texto('professor')
         if texto_professor.startswith(texto) and texto_professor != texto:
-            # imagem branca
+            # define a imagem como branca
             self.cache = texto_professor[len(texto) :][0]
             self._definir_imagem(self.cache, "brancas")
         elif not texto_professor.startswith(texto):
-            # imagem vermelha
+            # define a imagem como vermelha
             if all([texto, self._apagar]):
                 self._aluno.do_backspace(self._aluno)
             elif texto:
@@ -182,27 +184,31 @@ class Janela:
         self._colorir_texto(texto_professor, texto)
 
     def _imagens_jogo_2(self, prof, aluno):
-        """Método que define a imagem como branca."""
-        texto, texto_professor = self._obter_texto(), self._obter_texto(True)
+        """Método que define a imagem como vermelha ou branca."""
+        texto = self._obter_texto('aluno')
+        texto_professor = self._obter_texto('professor')
         if texto_professor.startswith(texto) and texto_professor != texto:
-            # imagem branca
+            # define a imagem como branca
             self.cache = texto_professor[len(texto) :][0]
             botao_ativo = int(self._niveis_botao.get_active_id())
             if botao_ativo > 0:
-                self._definir_imagem(self.cache, "?", "pequenas")
+                self._definir_imagem(self.cache, "interrogacao", "pequenas")
             else:
                 self._definir_imagem(self.cache, "brancas")
         elif not texto_professor.startswith(texto):
+            # define a imagem como vermelha
             # fazer o do_backspace ou definir backspace como brancas
             if all([texto, self._apagar]):
                 self._aluno.do_backspace(self._aluno)
             elif texto:
                 self._definir_imagem("backspace", "brancas")
+            self.red_cache = texto[-1]
+            self._definir_imagem(self.red_cache, "interrogacao", 'pequenas_red')
         self._colorir_texto(texto_professor, texto)
 
     def professor_digitando(self, widget):
         """Método que gerencia a popup e define a próxima imagem como branca."""
-        texto_professor = self._obter_texto(True)
+        texto_professor = self._obter_texto('professor')
         if len(texto_professor) == 1 or self.texto_do_arquivo:
             self._normalizar_imagem()
             self.cache = self.prof_cache = texto_professor[0]
@@ -231,6 +237,12 @@ class Janela:
             self._definir_imagem(self.prof_cache, "normais")
             self.prof_cache = ""
 
+    # argumentos:
+    # letra -> qualquer letra do alfabeto português, com ou sem acento.
+    # pasta -> nome da pasta onde contem a imagem.
+    # o que pode ser passado para pasta: brancas, interrogacao, normais, vermelhas.
+    # nomeNaoDicionario -> é um nome que não contem no dicionário.
+    # o que pode ser passado para nomeNaoDicionario: pequenas, pequenas_red
     def _definir_imagem(self, letra, pasta, nomeNaoDicionario=""):
         """Método que define a imagem."""
         for imagem in dicionário.get(letra.lower(), letra.lower()):
@@ -261,9 +273,12 @@ class Janela:
             prof.delete(prof.get_start_iter(), prof.get_end_iter())
             aluno.delete(aluno.get_start_iter(), aluno.get_end_iter())
 
-    def _obter_texto(self, professor=False):
+    def _obter_texto(self, usuario):
         """Método que obtem o texto do aluno ou o do professor."""
-        user = self._professor_texto if professor else self._aluno_texto
+        if usuario == 'aluno':
+            user = self._aluno_texto
+        elif usuario == 'professor':
+            user = self._professor_texto
         texto = user.get_text(user.get_start_iter(), user.get_end_iter(), False)
         return texto
 
@@ -364,15 +379,15 @@ class Janela:
 
     def _jogo1(self):
         """Método que joga o jogo 1."""
-        letra = self._obter_texto()[-1:]  # não remova os pontos pois gera um bug
+        letra = self._obter_texto('aluno')[-1:]  # não remova os pontos pois gera um bug
         self._aluno_texto.set_text(letra)
         if letra == self.cache:
             if self._niveis_botao.get_active_id() != "0":
-                self._definir_imagem(self.cache, "?", "pequenas_red")
+                self._definir_imagem(self.cache, "interrogacao", "pequenas_red")
             else:
                 self._normalizar_imagem()
             self.cache = choice(jogo1)
-            self._definir_imagem(self.cache, "?", "pequenas")
+            self._definir_imagem(self.cache, "interrogacao", "pequenas")
 
     def _jogo2(self):
         """Método que roda o jogo 2."""
@@ -382,23 +397,27 @@ class Janela:
         if botao_ativo == 0:
             self._normalizar_imagem()
         elif botao_ativo > 0:
-            self._definir_imagem(self.cache, "?", "pequenas_red")
+            self._definir_imagem(self.cache, "interrogacao", "pequenas_red")
         prof = self._professor_texto
-        texto = self._obter_texto()
-        texto_professor = self._obter_texto(True)
+        texto = self._obter_texto('aluno')
+        texto_professor = self._obter_texto('professor')
         self._textos_iguais_jogo_2(texto, texto_professor, prof, self._aluno_texto)
-        if not self._obter_texto(True):
+        if not self._obter_texto('professor'):
             self._professor_texto.set_text(choice(palavras))
         self._imagens_jogo_2(prof, self._aluno_texto)
 
     def _jogo3(self):
         """Método que roda o jogo 3."""
-        letra = self._obter_texto()[-1:]  # não remova os pontos
+        letra = self._obter_texto('aluno')[-1:]  # não remova os pontos
         self._aluno_texto.set_text(letra)
         if letra == self.cache:
             self._normalizar_imagem()
             self.cache = choice(jogo4)
-            self._definir_imagem(self.cache, "brancas")
+            botao_ativo = int(self._niveis_botao.get_active_id())
+            if botao_ativo == 0:
+                self._definir_imagem(self.cache, "brancas")
+            if botao_ativo in [1, 2]:
+                self._definir_imagem(self.cache, 'interrogacao', 'pequenas')
             self._professor_texto.set_text(self.cache)
 
     def _nivel_alterado(self, widget):
@@ -406,16 +425,16 @@ class Janela:
         jogo_id = self.jogo_escolhido + widget.get_active_id()
         if jogo_id in ("12", "22"):
             for letra in jogo1:
-                self._definir_imagem(letra, "?", "pequenas_red")
-            self._definir_imagem(self.cache, "?", "pequenas")
+                self._definir_imagem(letra, "interrogacao", "pequenas_red")
+            self._definir_imagem(self.cache, "interrogacao", "pequenas")
         else:
             for letra in jogo1:
                 self._definir_imagem(letra, "normais")
-            self._definir_imagem(self.cache, "?", "pequenas")
+            self._definir_imagem(self.cache, "interrogacao", "pequenas")
 
     def _remover_palavra_funcao(self, widget):
         """Método que adiciona a palavra na lista negativa do arquivo palavras_erradas.txt."""
-        palavra = self._obter_texto(True)
+        palavra = self._obter_texto('professor')
         if palavra not in palavras_erradas:
             palavras_erradas.append(palavra)
             with open("palavras_erradas.txt", "a") as file:
