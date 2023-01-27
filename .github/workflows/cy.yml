@@ -44,7 +44,7 @@ jobs:
           python -m pip install pyinstaller pyinstaller-hooks-contrib
 
       - name: Build with pyinstaller for ${{ matrix.config.os }}
-        run: pyinstaller main.py --onefile --noconsole
+        run: pyinstaller main.spec
 
       - name: Rename builded app
         run: mv ./dist ./dist-${{ matrix.config.os }}
