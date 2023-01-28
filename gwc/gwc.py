@@ -75,7 +75,7 @@ class Janela:
         self.texto_do_arquivo = []
         self.n_word_cache = -1
         self.jogo_escolhido = "0"
-        self.n_jogos = {"1": self._jogo1, "2": self._jogo2, "3": self._jogo3}
+        self.n_jogos = {'0': lambda: 1, "1": self._jogo1, "2": self._jogo2, "3": self._jogo3}
 
         # obtendo a interface glade.
         self.builder.add_from_file(str(local_da_execucao / "gwc.glade"))
@@ -327,8 +327,7 @@ class Janela:
             self._definir_imagem(a, "normais")
         if self.jogo_escolhido == "0":
             self._aluno_texto.connect("end-user-action", self.aluno_digitando)
-            if cache != "0":
-                self._aluno_texto.disconnect_by_func(self._jogo)
+            self._aluno_texto.disconnect_by_func(self._jogo)
             self._normalizar_imagem()
             self._niveis.set_visible(False)
             self._professor.set_sensitive(True)
@@ -375,6 +374,8 @@ class Janela:
         """
         Método que roda os jogos escolhidos quando algum jogo é escolhido.
         """
+        # numero = int(self.jogo_escolhido) + 1
+        # self.n_jogos[str(numero)]()
         self.n_jogos[self.jogo_escolhido]()
 
     def _jogo1(self):
