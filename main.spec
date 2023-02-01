@@ -13,7 +13,7 @@ a = Analysis(
         ('imagens', './imagens'),
         ('palavras.txt', '.')
     ],
-    hiddenimports=[],
+    hiddenimports=['PIL._tkinter_finder'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
