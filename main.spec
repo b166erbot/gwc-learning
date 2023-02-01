@@ -11,7 +11,6 @@ a = Analysis(
     datas=[
         ('config', './config'),
         ('imagens', './imagens'),
-        ('gwc.glade', '.'),
         ('palavras.txt', '.')
     ],
     hiddenimports=[],

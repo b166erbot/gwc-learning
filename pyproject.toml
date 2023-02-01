@@ -8,8 +8,7 @@ packages = [{include = "gwc_learning"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pycairo = "^1.23.0"
-pygobject = "^3.42.2"
+pillow = "^9.4.0"
 
 
 [build-system]
