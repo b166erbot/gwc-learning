@@ -5,8 +5,8 @@ Gnome Writer Corretly - Learning
 Requirements:
 =============
 
-    - gi -> sudo apt-get install python3-gi
-    - or install via pip -> pip install pygobject
+    - pillow - pip install pillow
+    - tkinter - sudo apt install -y python3-tk
 
 How to execute:
 ===============
@@ -17,11 +17,6 @@ Python version:
 ===============
 
     - 3.6.7 +
-
-Programs used:
-==============
-
-    - Glade - UI xml interface.
 
 
 Contributors:
