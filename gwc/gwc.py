@@ -383,13 +383,7 @@ class Janela(tk.Tk):
         texto_professor = self._obter_texto('professor')
         self._normalizar_imagem()
         self._textos_iguais(texto, texto_professor, prof, aluno)
-        condicao = [
-            all([texto, self._apagar]),
-            not texto_professor.startswith(texto)
-        ]
-        if all(condicao):
-            self._limpar_texto('aluno')
-            self._text_aluno.insert(1.0, texto[:-1])
+        self.apagar_palavra_errada(texto, texto_professor)
         self._imagens(prof, aluno)
 
     def _textos_iguais(self, texto, texto_professor, prof, aluno):
@@ -470,6 +464,15 @@ class Janela(tk.Tk):
         self._apagar = not self._apagar
         self._limpar_texto('aluno')
         self.aluno_digitando(None)
+    
+    def apagar_palavra_errada(self, texto_aluno, texto_professor):
+        condicao = [
+            texto_aluno, self._apagar,
+            not texto_professor.startswith(texto_aluno)
+        ]
+        if all(condicao):
+            self._limpar_texto('aluno')
+            self._text_aluno.insert(1.0, texto_aluno[:-1])
 
     def _normalizar_imagem(self):
         """Método que volta a imagem ao padrão."""
@@ -650,6 +653,7 @@ class Janela(tk.Tk):
         texto_professor = self._obter_texto('professor')
         # é obrigatório chamar o _textos_iguais antes do if senão gera um bug
         self._textos_iguais_jogo_2(texto, texto_professor, prof, aluno)
+        self.apagar_palavra_errada(texto, texto_professor)
         if not texto_professor:
             prof.insert(1.0, choice(palavras))
         self._imagens(prof, aluno)
