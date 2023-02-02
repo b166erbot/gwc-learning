@@ -46,17 +46,8 @@ dedos = [
 jogo1 = "abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\"
 jogo4 = "ãêáõôéâíóúà`´~^" + "ãêáõôéâíóúà".upper()
 
-with open(local_da_execucao / "palavras.txt", "r") as file:
+with open(local_da_execucao / "palavras.txt", "r", encoding='utf-8') as file:
     palavras = set([palavra.strip() for palavra in file.readlines()])
-
-if Path("palavras_erradas.txt").exists():
-    with open("palavras_erradas.txt") as file:
-        palavras_erradas = set([palavra.strip() for palavra in file.readlines()])
-    palavras -= palavras_erradas
-else:
-    palavras_erradas = set()
-palavras = list(palavras)
-palavras_erradas = list(palavras_erradas)
 
 
 # def colorir(texto, posicao, cor="green1"):
