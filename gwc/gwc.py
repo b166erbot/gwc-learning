@@ -25,7 +25,8 @@ def retornar_local():
 
 local_da_execucao = retornar_local()
 
-with open(local_da_execucao / "config/teclas.json") as arquivo:
+local_teclas_json = local_da_execucao / "config/teclas.json"
+with open(local_teclas_json, encoding = 'utf-8') as arquivo:
     dicionário = load(arquivo)
 
 # refatorar. mover para outro escopo?
@@ -47,7 +48,7 @@ jogo1 = "abcdefghijklmnopqrstuvxwyzç,.;/~]´[\\"
 jogo4 = "ãêáõôéâíóúà`´~^" + "ãêáõôéâíóúà".upper()
 
 with open(local_da_execucao / "palavras.txt", "r", encoding='utf-8') as file:
-    palavras = set([palavra.strip() for palavra in file.readlines()])
+    palavras = [palavra.strip() for palavra in file.readlines()]
 
 
 # def colorir(texto, posicao, cor="green1"):
@@ -85,7 +86,8 @@ class Janela(tk.Tk):
         }
         
         # Carregando o nome das imagens.
-        with open(local_da_execucao / "config/imagens.json") as arquivo:
+        local_imagens_json = local_da_execucao / "config/imagens.json"
+        with open(local_imagens_json, encoding = 'utf-8') as arquivo:
             imagens = load(arquivo)
             self.imagens = dict()
             for dicio in imagens:
@@ -457,6 +459,7 @@ class Janela(tk.Tk):
         self.aluno_digitando(None)
     
     def apagar_palavra_errada(self, texto_aluno, texto_professor):
+        """Método que apaga o caracter caso ele não seja o correto."""
         condicao = [
             texto_aluno, self._apagar,
             not texto_professor.startswith(texto_aluno)
@@ -642,9 +645,10 @@ class Janela(tk.Tk):
         aluno = self._text_aluno
         texto = self._obter_texto('aluno')
         texto_professor = self._obter_texto('professor')
+        self.apagar_palavra_errada(texto, texto_professor)
         # é obrigatório chamar o _textos_iguais antes do if senão gera um bug
         self._textos_iguais_jogo_2(texto, texto_professor, prof, aluno)
-        self.apagar_palavra_errada(texto, texto_professor)
+        texto_professor = self._obter_texto('professor')
         if not texto_professor:
             prof.insert(1.0, choice(palavras))
         self._imagens(prof, aluno)
