@@ -17,17 +17,11 @@ jobs:
           - os: macos-latest
           - os: windows-2019
     steps:
-      - name: Install pygobject and pycairo on ubuntu
+      - name: Install tkinter and setuptools on ubuntu
         if: ${{ matrix.config.os == 'ubuntu-22.04'}}
         run: |
           sudo apt-get update
           sudo apt install python3-pip python3-dev python3-setuptools python3-tk
-
-      # - name: Install brew and its dependences on macos
-      #   if: ${{ matrix.config.os == 'macos-latest'}}
-      #   run: |
-      #     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      #     brew install pygobject3 gtk+3
 
       - name: Checkout code
         uses: actions/checkout@v3
