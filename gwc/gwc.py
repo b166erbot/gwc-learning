@@ -549,7 +549,8 @@ class Janela(tk.Tk):
         self._limpar_texto('ambos')
         try:
             self.combobox_jogos.current(0)
-            with filedialog.askopenfile() as arquivo:
+            nome_arquivo = filedialog.askopenfilename()
+            with open(nome_arquivo, encoding='utf-8') as arquivo:
                 self.texto_do_arquivo = arquivo.readlines()
             # self._text_professor.config(state='disabled')
             # não pode desabilitar senão ele não insere texto
