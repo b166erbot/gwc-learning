@@ -664,7 +664,6 @@ class Janela(tk.Tk):
                     self.mostrar_janela_fim_de_jogo()
                     self.combobox_jogos.current(0)
                     self.jogo_alterado(None)
-                treinamento = ['aa', 'bc']
                 persistencia['treinar letras'] = treinamento
                 self._treinamento = treinamento
             if self.combobox_jogos.get() == self.nomes_dos_jogos[4]:
