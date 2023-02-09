@@ -7,13 +7,14 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
 from PIL import Image, ImageTk
-import re
 from json import load
 from pathlib import Path
 from random import choice
 import sys
 from string import printable
 from unittest.mock import Mock
+import shelve
+from gwc.tools import cortar, fazer_string_de_treinamento
 
 
 def retornar_local():
@@ -23,6 +24,7 @@ def retornar_local():
     else:
         return Path('.')
 
+
 local_da_execucao = retornar_local()
 
 local_teclas_json = local_da_execucao / "config/teclas.json"
@@ -30,7 +32,9 @@ with open(local_teclas_json, encoding = 'utf-8') as arquivo:
     dicionário = load(arquivo)
 
 # refatorar. mover para outro escopo?
-printable = printable[:-2]
+persistencia = shelve.open('save.pkl')
+
+printable = printable[:-2] + 'çÇ'
 right_shift = "qwertasdfgzxcvbãáâàêé"
 left_shift = "yuiophjklçnmíõôóú"
 lr = right_shift + left_shift
@@ -49,16 +53,6 @@ jogo4 = "ãêáõôéâíóúà`´~^" + "ãêáõôéâíóúà".upper()
 
 with open(local_da_execucao / "palavras.txt", "r", encoding='utf-8') as file:
     palavras = [palavra.strip() for palavra in file.readlines()]
-
-
-# def colorir(texto, posicao, cor="green1"):
-#     """
-#     Função que colore um texto em uma determinada posição.
-#     """
-#     texto = list(map("".join, re.findall(r"(\s*)(\S*)(\s*)", texto)))
-#     # texto = texto.split(' ')  # não remova o espaço
-#     texto[posicao] = f'<span color="{cor}">{texto[posicao]}</span>'
-#     return "".join(texto)
 
 
 class Janela(tk.Tk):
@@ -82,8 +76,13 @@ class Janela(tk.Tk):
             'Nenhum': lambda: 1,
             "Adivinhe a tecla": self._jogo1,
             "Digite a palavra": self._jogo2,
-            "Treinar acentos": self._jogo3
+            "Treinar acentos": self._jogo3,
+            "Treinar letras": self._jogo4
         }
+        if 'treinar letras' in persistencia:
+            self._treinamento = persistencia['treinar letras']
+        else:
+            self._treinamento = 'primeira vez'
         
         # Carregando o nome das imagens.
         local_imagens_json = local_da_execucao / "config/imagens.json"
@@ -209,7 +208,6 @@ class Janela(tk.Tk):
                 # Colocando a imagem no dicionário de imagens
                 self.imagens[nome] = label
 
-        # ==================================================================
         # ========================== FRAME_DIREITA =========================
         '''
         Aqui vão algumas abas de configurações do programa
@@ -275,10 +273,18 @@ class Janela(tk.Tk):
             'Nenhum',
             'Adivinhe a tecla',
             'Digite a palavra',
-            'Treinar acentos'
+            'Treinar acentos',
+            'Treinar letras'
         )
         self.combobox_jogos['values'] = self.nomes_dos_jogos
         self.combobox_jogos.current(0)
+
+        # Criando botão de salvar progresso:
+        self._botao_salvar_progresso = tk.Button(
+            self.frame_direita,
+            text = 'Salvar progresso',
+            command = self.salvar_estado_jogo_4
+        )
         
         # Posicionando os Widgets:
         label_texto.grid()
@@ -288,8 +294,8 @@ class Janela(tk.Tk):
         self.button_auto_apagar.grid()
         label_jogos.grid()
         self.combobox_jogos.grid()
+        self._botao_salvar_progresso.grid_forget()
         
-        # ==================================================================
         # =========================== FRAME_BAIXO ==========================
         # Criando o Frame:
         self.frame_baixo = tk.Frame(self)
@@ -424,15 +430,12 @@ class Janela(tk.Tk):
                 self._definir_imagem("backspace", "brancas")
             self.red_cache = texto[-1]
             self._definir_imagem(self.red_cache, "vermelhas")
-        # self._colorir_texto(texto_professor, texto)
 
     def professor_digitando(self, evento):
         """Método que gerencia a popup e define a próxima imagem como branca."""
         texto_professor = self._obter_texto('professor')
         if not bool(texto_professor):
             self._normalizar_imagem()
-            # self._popover.hide()
-            # self._poplabel.set_text("")
         if evento.char in printable and bool(texto_professor):
             opcoes = [
                 len(texto_professor) == 1,
@@ -524,6 +527,7 @@ class Janela(tk.Tk):
             prof.delete(1.0, 'end')
             aluno.delete(1.0, 'end')
 
+    # entradas para o parâmetro usuário: 'aluno', 'professor'
     def _obter_texto(self, usuario):
         """Método que obtem o texto do aluno ou o do professor."""
         if usuario == 'aluno':
@@ -532,17 +536,6 @@ class Janela(tk.Tk):
             user = self._text_professor
         texto = user.get(1.0, "end-1c")
         return texto
-
-    # def _dedos(self, letra, imagem, quadro):
-    #     """
-    #     Método que mostra a popup na imagem correta com o número do dedo correto.
-    #     """
-    #     for conjunto in dedos:
-    #         if imagem.lower() in conjunto or letra.lower() in conjunto:
-    #             texto = str(dedos.index(conjunto) % 4 + 1)
-    #             self._mostrar_popup(quadro, texto)
-    #     if letra == " ":
-    #         self._mostrar_popup(quadro, "5")
 
     def abrir_arquivo(self):
         """Método que abre o arquivo e exibe a primeira palavra."""
@@ -567,60 +560,43 @@ class Janela(tk.Tk):
         self.texto_do_arquivo = []
         self._limpar_texto("ambos")
         self.botao_remover_arquivo.config(state='disabled')
-        # self._popover.hide()
-
-    # def _mostrar_popup(self, tecla, texto):
-    #     """Método que mostra a popup."""
-    #     self._popover.hide()
-    #     self._poplabel.set_text(f"dedo: {texto}")
-    #     self._popover.set_relative_to(tecla)
-    #     self._popover.show()
+    
+    def salvar_estado_jogo_4(self):
+        self._treinamento.insert(0, self._proxima_entrada)
+        persistencia['treinar letras'] = self._treinamento
 
     def jogo_alterado(self, evento):
         """Método que altera o tipo de jogo."""
         self.remover_arquivo()
         self.jogo_escolhido = self.combobox_jogos.get()
         self._normalizar_imagem()
+        self._limpar_texto('ambos')
         self.cache = ''
-        self.button_auto_apagar['state'] = 'disabled'
         if self.jogo_escolhido == self.nomes_dos_jogos[0]:
             self._text_aluno.unbind('<KeyRelease>')
             self._text_aluno.bind('<KeyRelease>', self.aluno_digitando)
-            self._normalizar_imagem()
             # gera um bug quando desabilita
             # self._text_professor.config(state='normal')
-            self._limpar_texto('ambos')
-            self.button_auto_apagar['state'] = 'normal'
         else:
             self._text_aluno.unbind('<KeyRelease>')
             self._text_aluno.bind('<KeyRelease>', self._jogo)
             # gera um bug quando desabilita
             # self._text_professor.config(state='disabled')
-            self._limpar_texto('ambos')
-            if self.jogo_escolhido == self.nomes_dos_jogos[2]:
-                self.button_auto_apagar['state'] = 'normal'
-            else:
-                self.button_auto_apagar['state'] = 'disabled'
             self._jogo(None)  # é preciso chamar a primeira vez
+        jogos_digitar = [
+            self.nomes_dos_jogos[2],
+            self.nomes_dos_jogos[0]
+        ]
+        if self.jogo_escolhido in jogos_digitar:
+            self.button_auto_apagar['state'] = 'normal'
+        else:
+            self.button_auto_apagar['state'] = 'disabled'
+        if self.jogo_escolhido == self.nomes_dos_jogos[4]:
+            self._botao_salvar_progresso.grid()
+        else:
+            self._botao_salvar_progresso.grid_forget()
         self._apagar = False
         self._status_auto_apagar.set(False)
-
-    # def _colorir_texto(self, texto_p, texto):
-    #     """Método que colore um texto em um text_view."""
-    #     prof = self._professor_texto
-    #     condicoes = [
-    #         bool(texto_p),
-    #         texto.count(" ") <= texto_p.count(" "),
-    #         texto_p.count(" ") > 0,
-    #         texto.count(" ") != self.n_word_cache,
-    #     ]
-    #     if all(condicoes):
-    #         prof.set_text("")
-    #         generator = map("".join, re.findall(r"(\s*)(\S*)(\s*)", texto))
-    #         numero = len(list(generator))
-    #         prof.insert_markup(prof.get_end_iter(), colorir(texto_p, numero - 2), -1)
-    #         self.n_word_cache = numero
-    #         # numero <- texto.count(' ')
 
     def _jogo(self, widget):
         """
@@ -665,6 +641,56 @@ class Janela(tk.Tk):
             self._definir_imagem(self.cache, "brancas")
             self._limpar_texto('professor')
             self._text_professor.insert(1.0, self.cache)
+    
+    def _jogo4(self):
+        """Método que roda o jogo 4."""
+        self.aluno_digitando(None)
+        texto_professor = self._obter_texto('professor')
+        if not bool(texto_professor):
+            if self._treinamento in ['primeira vez', []]:
+                letras_teclado = [
+                    'fjdkslaçgh', 'rueiwoqpty', 'vmc,x.z;bn'
+                ]
+                treinamento = [
+                    cortar(conjunto, 2) for conjunto in letras_teclado
+                ]
+                treinamento = [
+                    fazer_string_de_treinamento(conjunto)
+                    for lista in treinamento
+                    for conjunto in lista
+                    for _ in range(4)
+                ]
+                if self._treinamento == []:
+                    self.mostrar_janela_fim_de_jogo()
+                    self.combobox_jogos.current(0)
+                    self.jogo_alterado(None)
+                treinamento = ['aa', 'bc']
+                persistencia['treinar letras'] = treinamento
+                self._treinamento = treinamento
+            if self.combobox_jogos.get() == self.nomes_dos_jogos[4]:
+                self._proxima_entrada = self._treinamento.pop(0)
+                self._text_professor.insert(1.0, self._proxima_entrada)
+    
+    def mostrar_janela_fim_de_jogo(self):
+        """Método que mostra uma janela com o botão ok."""
+        self._janela_ok = tk.Toplevel(self)
+        self._janela_ok.title('janela ok')
+        label = tk.Label(
+            self._janela_ok,
+            text = (
+                'Parabéns! você terminou o treinar letras!\n'
+                'agora você pode jogar outros jogos para '
+                'aumentar seu aprendizado.'
+            )
+        )
+        label.pack()
+        botao = tk.Button(
+            self._janela_ok,
+            text = 'ok',
+            command = self._janela_ok.destroy
+        )
+        botao.pack()
+
 
 # Executando a janela:
 def main():
