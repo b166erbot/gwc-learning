@@ -83,6 +83,7 @@ class Janela(tk.Tk):
             self._treinamento = persistencia['treinar letras']
         else:
             self._treinamento = 'primeira vez'
+        self._proxima_entrada = ''
         
         # Carregando o nome das imagens.
         local_imagens_json = local_da_execucao / "config/imagens.json"
@@ -562,41 +563,44 @@ class Janela(tk.Tk):
         self.botao_remover_arquivo.config(state='disabled')
     
     def salvar_estado_jogo_4(self):
-        self._treinamento.insert(0, self._proxima_entrada)
+        if bool(self._proxima_entrada):
+            self._treinamento.insert(0, self._proxima_entrada)
         persistencia['treinar letras'] = self._treinamento
 
     def jogo_alterado(self, evento):
         """Método que altera o tipo de jogo."""
-        self.remover_arquivo()
+        self.jogo_escolhido_cache = self.jogo_escolhido
         self.jogo_escolhido = self.combobox_jogos.get()
-        self._normalizar_imagem()
-        self._limpar_texto('ambos')
-        self.cache = ''
-        if self.jogo_escolhido == self.nomes_dos_jogos[0]:
-            self._text_aluno.unbind('<KeyRelease>')
-            self._text_aluno.bind('<KeyRelease>', self.aluno_digitando)
-            # gera um bug quando desabilita
-            # self._text_professor.config(state='normal')
-        else:
-            self._text_aluno.unbind('<KeyRelease>')
-            self._text_aluno.bind('<KeyRelease>', self._jogo)
-            # gera um bug quando desabilita
-            # self._text_professor.config(state='disabled')
-            self._jogo(None)  # é preciso chamar a primeira vez
-        jogos_digitar = [
-            self.nomes_dos_jogos[2],
-            self.nomes_dos_jogos[0]
-        ]
-        if self.jogo_escolhido in jogos_digitar:
-            self.button_auto_apagar['state'] = 'normal'
-        else:
-            self.button_auto_apagar['state'] = 'disabled'
-        if self.jogo_escolhido == self.nomes_dos_jogos[4]:
-            self._botao_salvar_progresso.grid()
-        else:
-            self._botao_salvar_progresso.grid_forget()
-        self._apagar = False
-        self._status_auto_apagar.set(False)
+        if self.jogo_escolhido_cache != self.jogo_escolhido:
+            self.remover_arquivo()
+            self._normalizar_imagem()
+            self._limpar_texto('ambos')
+            self.cache = ''
+            if self.jogo_escolhido == self.nomes_dos_jogos[0]:
+                self._text_aluno.unbind('<KeyRelease>')
+                self._text_aluno.bind('<KeyRelease>', self.aluno_digitando)
+                # gera um bug quando desabilita
+                # self._text_professor.config(state='normal')
+            else:
+                self._text_aluno.unbind('<KeyRelease>')
+                self._text_aluno.bind('<KeyRelease>', self._jogo)
+                # gera um bug quando desabilita
+                # self._text_professor.config(state='disabled')
+                self._jogo(None)  # é preciso chamar a primeira vez
+            jogos_digitar = [
+                self.nomes_dos_jogos[2],
+                self.nomes_dos_jogos[0]
+            ]
+            if self.jogo_escolhido in jogos_digitar:
+                self.button_auto_apagar['state'] = 'normal'
+            else:
+                self.button_auto_apagar['state'] = 'disabled'
+            if self.jogo_escolhido == self.nomes_dos_jogos[4]:
+                self._botao_salvar_progresso.grid()
+            else:
+                self._botao_salvar_progresso.grid_forget()
+            self._apagar = False
+            self._status_auto_apagar.set(False)
 
     def _jogo(self, widget):
         """
@@ -648,27 +652,38 @@ class Janela(tk.Tk):
         texto_professor = self._obter_texto('professor')
         if not bool(texto_professor):
             if self._treinamento in ['primeira vez', []]:
-                letras_teclado = [
-                    'fjdkslaçgh', 'rueiwoqpty', 'vmc,x.z;bn'
-                ]
-                treinamento = [
-                    cortar(conjunto, 2) for conjunto in letras_teclado
-                ]
-                treinamento = [
-                    fazer_string_de_treinamento(conjunto)
-                    for lista in treinamento
-                    for conjunto in lista
-                    for _ in range(4)
-                ]
+                treinamento = self._criar_sequencia_letras()
                 if self._treinamento == []:
                     self.mostrar_janela_fim_de_jogo()
                     self.combobox_jogos.current(0)
                     self.jogo_alterado(None)
                 persistencia['treinar letras'] = treinamento
                 self._treinamento = treinamento
-            if self.combobox_jogos.get() == self.nomes_dos_jogos[4]:
+                self._proxima_entrada = ''
+            condicoes = (
+                not bool(self._proxima_entrada),
+                self.jogo_escolhido_cache == self.combobox_jogos.get()
+            )
+            if any(condicoes):
                 self._proxima_entrada = self._treinamento.pop(0)
-                self._text_professor.insert(1.0, self._proxima_entrada)
+            self.jogo_escolhido_cache = self.combobox_jogos.get()
+            self._text_professor.insert(1.0, self._proxima_entrada)
+    
+    def _criar_sequencia_letras(self) -> list[str]:
+        """Método que cria uma sequência de letras para o jogo 4."""
+        letras_teclado = [
+            'fjdkslaçgh', 'rueiwoqpty', 'vmc,x.z;bn'
+        ]
+        treinamento = [
+            cortar(conjunto, 2) for conjunto in letras_teclado
+        ]
+        treinamento = [
+            fazer_string_de_treinamento(conjunto)
+            for lista in treinamento
+            for conjunto in lista
+            for _ in range(4)
+        ]
+        return treinamento
     
     def mostrar_janela_fim_de_jogo(self):
         """Método que mostra uma janela com o botão ok."""
